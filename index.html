@@ -1,0 +1,178 @@
+<!doctype html><html lang="uz"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Elegant Challenge</title>
+<style>
+:root{--bg:#f6f7f9;--sf:#fff;--tx:#14181f;--mu:#667085;--bd:#e3e6ec;--ac:#3b5bdb;--ok:#12805c;--wr:#b54708;--er:#c0392b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1218;--sf:#181c25;--tx:#eef0f4;--mu:#98a2b3;--bd:#2a303c;--ac:#7c95ff;--ok:#3ecf9a;--wr:#f5a54a;--er:#ff7b6b;color-scheme:dark}}
+:root[data-theme=dark]{--bg:#0f1218;--sf:#181c25;--tx:#eef0f4;--mu:#98a2b3;--bd:#2a303c;--ac:#7c95ff;--ok:#3ecf9a;--wr:#f5a54a;--er:#ff7b6b;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:var(--sf);border-bottom:1px solid var(--bd);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.bar{max-width:1040px;margin:auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:700;font-size:18px;letter-spacing:-.3px}.brand b{color:var(--ac)}
+nav{display:flex;gap:2px;overflow-x:auto;flex:1;min-width:220px}nav button{white-space:nowrap}
+button,select,input,textarea{font:inherit;color:var(--tx)}button{background:none;border:0;padding:7px 11px;border-radius:8px;cursor:pointer}
+nav button:hover,nav button.on{background:var(--bg)}nav button.on{color:var(--ac);font-weight:600}
+.ctl{display:flex;gap:6px}.ctl button,select{border:1px solid var(--bd);background:var(--sf);border-radius:8px;padding:6px 9px}
+main{max-width:1040px;margin:auto;padding:20px 16px 60px}h1{font-size:24px;margin:0 0 4px;letter-spacing:-.4px}h2{font-size:17px;margin:24px 0 10px}.mu{color:var(--mu)}
+.note{background:var(--sf);border:1px dashed var(--bd);border-radius:10px;padding:9px 12px;font-size:13px;color:var(--mu);margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;background:var(--bg);border:1px solid var(--bd);color:var(--mu)}.ok{color:var(--ok)}.wr{color:var(--wr)}.er{color:var(--er)}
+.btn{background:var(--ac);color:#fff;border-radius:8px}.btn.s{background:var(--sf);color:var(--tx);border:1px solid var(--bd)}.btn.d{background:var(--er);color:#fff}.btn:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+input,textarea,select{border:1px solid var(--bd);background:var(--sf);border-radius:8px;padding:8px 10px;max-width:100%}input[type=text],input[type=password],input[type=number],textarea{width:100%}
+label{display:block;font-size:13px;color:var(--mu);margin:10px 0 3px}
+.tw{overflow-x:auto;background:var(--sf);border:1px solid var(--bd);border-radius:12px}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--bd);white-space:nowrap}th{color:var(--mu);font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}.stats b{font-size:26px;display:block}
+.es{text-align:center;padding:34px 16px;background:var(--sf);border:1px dashed var(--bd);border-radius:12px}.es h3{margin:0 0 4px}
+.auth{max-width:420px;margin:6vh auto;padding:0 16px}
+#gm{position:fixed;inset:0;background:var(--bg);z-index:20;overflow:auto;padding:calc(20px + env(safe-area-inset-top,0px)) 22px 30px}
+.big{font-size:min(22vw,200px);font-weight:700;text-align:center;font-variant-numeric:tabular-nums;line-height:1.1}.qt{font-size:clamp(22px,3.6vw,44px);font-weight:600;text-align:center;margin:16px 0}
+.sc{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}.sc .card{min-width:150px;text-align:center}.sc b{font-size:34px;display:block}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:9px 14px;border-radius:10px;opacity:0;transition:.2s;pointer-events:none;z-index:99;max-width:90vw}#toast.on{opacity:1}
+</style></head><body><div id="app"></div><div id="gm" hidden></div><div id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.1/dist/umd/supabase.js"></script>
+<script>
+const D={uz:{home:'Bosh sahifa',projects:'Loyihalar',challenges:'Tanlovlar',news:'Yangiliklar',zakovat:'Zakovat',profile:'Profil',notif:'Bildirishnomalar',admin:'Admin panel',users:'Foydalanuvchilar',audit:'Audit jurnali',
+login:'Kirish',reg:'Ro‘yxatdan o‘tish',fn:'Ism',ln:'Familiya',un:'Username',pw:'Parol',pw2:'Parolni tasdiqlang',role:'Rol',stu:'O‘quvchi',tea:'O‘qituvchi',cls:'Sinf',subj:'Fan yoki lavozim',out:'Chiqish',
+sent:'So‘rov yuborildi. Administrator tasdiqlagach hisobingiz faollashadi.',taken:'Bu username band.',bad:'Maydonlarni to‘g‘ri to‘ldiring (parol kamida 8 belgi, ikkalasi bir xil).',
+dev:'Faqat ishlab chiqish uchun UI ko‘rinishi (backend ulanganda olib tashlanadi):',
+noP:['Bu yerda hali loyihalar yo‘q.','Birinchi loyihani yaratish orqali boshlang.'],noC:['Hozircha tanlovlar mavjud emas.',''],noN:['Hozircha yangiliklar joylashtirilmagan.',''],noX:['Hozircha bildirishnomalar yo‘q.',''],
+users_n:'Foydalanuvchilar',pend:'Kutilmoqda',stud:'O‘quvchilar',teach:'O‘qituvchilar',adm:'Adminlar',susp:'To‘xtatilgan',
+denied:'Ruxsat yo‘q: bu bo‘limga kirish huquqingiz mavjud emas.',approve:'Tasdiqlash',reject:'Rad etish',promote:'Admin qilish',demote:'Adminlikni olish',confirm:'Tasdiqlaysizmi?',
+zstart:'Zakovatni boshlash',zdesc:'Savollar bazasini boshqaring va o‘yinni tashkil qiling.',addq:'Savol qo‘shish',qtext:'Savol matni',ans:'To‘g‘ri javob',cat:'Kategoriya',dif:'Qiyinlik',tl:'Vaqt (soniya)',expl:'Izoh (ixtiyoriy)',save:'Saqlash',del:'O‘chirish',search:'Qidirish…',all:'Hammasi',
+easy:'Oson',mid:'O‘rta',hard:'Qiyin',noQ:['Savollar bazasi bo‘sh.','Birinchi savolni qo‘shing.'],addt:'+ Jamoa qo‘shish',tname:'Jamoa nomi',tmem:'A’zolar (vergul bilan)',noT:['Hali jamoalar yo‘q.','“+ Jamoa qo‘shish” tugmasini bosing.'],
+begin:'O‘yinni boshlash',cnt:'Savollar soni',pick:'Tanlash',dur:'Taymer (soniya)',start:'Taymerni boshlash',pause:'To‘xtatish',resume:'Davom ettirish',reveal:'Javobni ko‘rsatish',next:'Keyingi',prev:'Oldingi',up:'Vaqt tugadi',end:'O‘yinni tugatish',
+ptadd:'+1 ball',ptundo:'Bekor qilish',winner:'G‘olib',close:'Yopish',fs:'To‘liq ekran',edit:'Tahrirlash',selq:'Tanlangan savollar',unsaved:'Natijalar bu prototipda bazaga saqlanmaydi.',cancel:'Bekor qilish',
+tot:'Jami loyihalar',appr:'Tasdiqlangan',pnd:'Kutilayotgan',likes:'Layklar',comm:'Izohlar',chal:'Qatnashgan tanlovlar',ach:'Yutuqlar',name:'Ism',status:'Holat',reg_d:'Sana',what:'Amal',target:'Maqsad',who:'Kim',when:'Vaqt',tt:'Matn',
+dash:'Dashboard',note:'Bu prototip: ma’lumotlar bo‘sh va faqat brauzer xotirasida. Haqiqiy baza, autentifikatsiya, yuklash va serverdagi ruxsat tekshiruvlari backend bosqichida qo‘shiladi.'},
+en:{home:'Home',projects:'Projects',challenges:'Challenges',news:'News',zakovat:'Zakovat',profile:'Profile',notif:'Notifications',admin:'Admin panel',users:'Users',audit:'Audit logs',
+login:'Sign in',reg:'Register',fn:'First name',ln:'Last name',un:'Username',pw:'Password',pw2:'Confirm password',role:'Role',stu:'Student',tea:'Teacher',cls:'Class',subj:'Subject or position',out:'Sign out',
+sent:'Request sent. Your account activates once an administrator approves it.',taken:'This username is taken.',bad:'Fill in all fields correctly (password 8+ characters, both match).',
+dev:'UI preview for development only (removed when the backend is connected):',
+noP:['No projects here yet.','Start by creating the first project.'],noC:['No challenges yet.',''],noN:['No news has been posted yet.',''],noX:['No notifications yet.',''],
+users_n:'Users',pend:'Pending',stud:'Students',teach:'Teachers',adm:'Admins',susp:'Suspended',
+denied:'Access denied: you do not have permission for this section.',approve:'Approve',reject:'Reject',promote:'Make Admin',demote:'Remove Admin',confirm:'Are you sure?',
+zstart:'Start Zakovat',zdesc:'Manage the question bank and run a game.',addq:'Add question',qtext:'Question text',ans:'Correct answer',cat:'Category',dif:'Difficulty',tl:'Time (seconds)',expl:'Explanation (optional)',save:'Save',del:'Delete',search:'Search…',all:'All',
+easy:'Easy',mid:'Medium',hard:'Hard',noQ:['The question bank is empty.','Add the first question.'],addt:'+ Add team',tname:'Team name',tmem:'Members (comma-separated)',noT:['No teams yet.','Press “+ Add team”.'],
+begin:'Begin game',cnt:'Number of questions',pick:'Select',dur:'Timer (seconds)',start:'Start timer',pause:'Pause',resume:'Resume',reveal:'Reveal answer',next:'Next',prev:'Previous',up:'Time’s up',end:'End game',
+ptadd:'+1 point',ptundo:'Undo',winner:'Winner',close:'Close',fs:'Fullscreen',edit:'Edit',selq:'Selected questions',unsaved:'Results are not saved to a database in this prototype.',cancel:'Cancel',
+tot:'Total projects',appr:'Approved',pnd:'Pending',likes:'Likes',comm:'Comments',chal:'Challenges joined',ach:'Achievements',name:'Name',status:'Status',reg_d:'Date',what:'Action',target:'Target',who:'By',when:'When',tt:'Text',
+dash:'Dashboard',note:'This is a prototype: data starts empty and lives only in this browser. Real database, authentication, uploads and server-side permission checks come with the backend.'}};
+const CATS=['History','Geography','Science','Logic','Literature','Technology','General knowledge','Other'];
+const S={l:'uz',role:null,page:'home',tab:'login',msg:''};const U=[],Q=[],AL=[];let qid=0,tid=0;
+const NAV={student:['home','projects','challenges','news','profile','notif'],teacher:['home','projects','challenges','news','zakovat','profile','notif'],admin:['home','projects','challenges','news','zakovat','admin','profile','notif'],super:['home','projects','challenges','news','zakovat','admin','users','audit','profile','notif']};
+const t=k=>D[S.l][k]??D.en[k]??k,$=i=>document.getElementById(i),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+try{const th=localStorage.getItem('th');if(th)document.documentElement.dataset.theme=th}catch(e){}
+const toast=x=>{const e=$('toast');e.textContent=x;e.className='on';setTimeout(()=>e.className='',2600)};
+const lv={student:0,teacher:1,admin:2,super:3},can=m=>S.role&&lv[S.role]>=lv[m];
+const es=a=>`<div class="es"><h3>${a[0]}</h3><div class="mu">${a[1]||''}</div></div>`;
+function theme(){const r=document.documentElement,d=getComputedStyle(r).colorScheme==='dark'?'light':'dark';r.dataset.theme=d;try{localStorage.setItem('th',d)}catch(e){}}
+function lang(){S.l=S.l==='uz'?'en':'uz';draw()}
+function go(p){if(!NAV[S.role].includes(p)){toast(t('denied'));return}S.page=p;draw()}
+function draw(){document.documentElement.lang=S.l;S.role?shell():authView()}
+const CFG={url:'https://gykexvophqfzvodfvdjx.supabase.co',anonKey:'sb_publishable_NCd0WSzhx2v3cPu0VUIK-g_qk1uI_9o'};/* Set at deployment. The anon key is public by design. NEVER put the service_role key or any password here. */
+const EM=u=>u+'@users.elegant.local';
+const sb=(CFG.url&&CFG.anonKey&&window.supabase)?supabase.createClient(CFG.url,CFG.anonKey,{auth:{persistSession:true,autoRefreshToken:true}}):null;
+Object.assign(D.uz,{nocfg:'Backend sozlanmagan, shuning uchun kirish va ro‘yxatdan o‘tish hozir ishlamaydi. Kerak: Supabase loyihasi, uning URL manzili va anon kaliti (CFG).',saInfo:'Super Admin hisobi faqat server tomonida tekshiriladi. Parol bu sahifada saqlanmaydi.',back:'Orqaga',badcred:'Username yoki parol noto‘g‘ri.',neterr:'Tarmoq xatosi. Internetni tekshirib, qayta urinib ko‘ring.',err:'Xatolik yuz berdi. Keyinroq qayta urinib ko‘ring.',noprof:'Hisob profili topilmadi. Administratorga murojaat qiling.',pending:'Hisobingiz hali tasdiqlanmagan. Administrator tasdiqlashini kuting.',rejected:'Ro‘yxatdan o‘tish so‘rovingiz rad etilgan.',suspended:'Hisobingiz vaqtincha to‘xtatilgan.',bad2:'Username va parolni kiriting.',notsa:'Bu hisob Super Admin emas.',pwlen:'Parol kamida 8 ta belgidan iborat bo‘lishi kerak.',pwupper:'Parolda kamida bitta katta harf bo‘lishi kerak.',pwmatch:'Parollar bir-biriga mos kelmadi.',badun:'Username faqat kichik lotin harflari, raqam va pastki chiziqdan iborat bo‘lsin (3–30 belgi).'});
+Object.assign(D.en,{nocfg:'The backend is not configured, so sign-in and registration do not work yet. Needed: a Supabase project, its URL and anon key (CFG).',saInfo:'The Super Admin account is verified on the server only. No password is stored in this page.',back:'Back',badcred:'Wrong username or password.',neterr:'Network error. Check your connection and try again.',err:'Something went wrong. Please try again later.',noprof:'Account profile not found. Contact an administrator.',pending:'Your account is not approved yet. Please wait for an administrator.',rejected:'Your registration request was rejected.',suspended:'Your account is suspended.',bad2:'Enter username and password.',notsa:'This account is not a Super Admin.',pwlen:'Password must be at least 8 characters.',pwupper:'Password must include at least one uppercase letter.',pwmatch:'Passwords do not match.',badun:'Username can only contain lowercase letters, numbers and underscores (3–30 characters).'});
+const say=(m,ok)=>{S.msg={t:m,ok};const e=$('amsg');if(e){e.textContent=m;e.className=ok?'ok':'er'}else authView()};
+const regForm=()=>`<label>${t('fn')}</label><input type="text" id="fn"><label>${t('ln')}</label><input type="text" id="ln"><label>${t('un')}</label><input type="text" id="un" autocapitalize="none"><label>${t('pw')}</label><input type="password" id="p1" autocomplete="new-password"><label>${t('pw2')}</label><input type="password" id="p2" autocomplete="new-password"><label>${t('role')}</label><select id="rl" onchange="$('x').placeholder=this.value==='student'?'${t('cls')}':'${t('subj')}'"><option value="student">${t('stu')}</option><option value="teacher">${t('tea')}</option></select><input type="text" id="x" placeholder="${t('cls')}" style="margin-top:8px"><div class="row"><button class="btn" onclick="register()">${t('reg')}</button></div>`;
+function authView(){const reg=S.tab==='reg',sa=S.sa&&!reg;const k=`onkeydown="if(event.key==='Enter')signin()"`;
+$('app').innerHTML=`<div class="auth"><div class="brand" style="font-size:26px;text-align:center">Elegant <b>Challenge</b></div>
+<div class="ctl" style="justify-content:center;margin:14px 0"><button onclick="S.tab='login';S.sa=false;S.msg='';draw()" class="${reg?'':'btn'}">${t('login')}</button><button onclick="S.tab='reg';S.msg='';draw()" class="${reg?'btn':''}">${t('reg')}</button><button onclick="lang()">${S.l==='uz'?'EN':'UZ'}</button><button onclick="theme()">◐</button></div>
+<div class="card">${reg?regForm():`${sa?`<h3 style="margin:0 0 4px">Super Admin</h3><div class="mu" style="font-size:13px">${t('saInfo')}</div>`:''}<label>${t('un')}</label><input type="text" id="lu" autocapitalize="none" autocomplete="username" value="${sa?'akobir':''}" ${sa?'readonly':''} ${k}><label>${t('pw')}</label><input type="password" id="lp" autocomplete="current-password" ${k}><div class="row"><button class="btn" id="sbm" onclick="signin()">${t('login')}</button>${sa?`<button class="btn s" onclick="S.sa=false;S.msg='';draw()">${t('back')}</button>`:''}</div>`}
+<div id="amsg" class="${S.msg.ok?'ok':'er'}" style="font-size:13px">${esc(S.msg.t||'')}</div></div>${sb?'':`<div class="note er">${t('nocfg')}</div>`}</div>`;
+const p=$('lp');if(p&&sa)p.focus()}
+function clearPw(){$('p1').value='';$('p2').value=''}
+async function register(){const v=i=>$(i).value.trim(),un=v('un').toLowerCase(),rl=$('rl').value;
+if(!v('fn')||!v('ln'))return say(t('bad'));
+if(!/^[a-z0-9_]{3,30}$/.test(un))return say(t('badun'));
+if(rl==='student'&&!v('x'))return say(t('bad'));
+const p1=$('p1').value;
+if(p1.length<8){clearPw();return say(t('pwlen'))}
+if(!/[A-Z]/.test(p1)){clearPw();return say(t('pwupper'))}
+if(p1!==$('p2').value){clearPw();return say(t('pwmatch'))}
+if(un==='akobir')return say(t('taken'));if(!sb)return say(t('nocfg'));
+const {error}=await sb.auth.signUp({email:EM(un),password:p1,options:{data:{username:un,first_name:v('fn'),last_name:v('ln'),account_type:rl,class_name:rl==='student'?v('x'):'',position:rl==='teacher'?v('x'):'',language:S.l}}});
+if(error){
+  console.error('SIGNUP ERROR:', error);
+  clearPw();
+  return say(error.message);
+}
+await sb.auth.signOut();S.msg={ok:1,t:t('sent')};S.tab='login';authView()}
+async function signin(){const u=$('lu').value.trim().toLowerCase(),pw=$('lp').value;
+if(u==='akobir'&&!S.sa){S.sa=true;S.msg='';return authView()}
+if(!u||!pw)return say(t('bad2'));if(!sb)return say(t('nocfg'));
+const b=$('sbm');if(b)b.disabled=true;
+const {data,error}=await sb.auth.signInWithPassword({email:EM(u),password:pw});
+if(error){if(b)b.disabled=false;$('lp').value='';return say(/invalid|credentials/i.test(error.message)?t('badcred'):/network|fetch/i.test(error.message)?t('neterr'):t('err'))}
+await enter(data.user,u==='akobir')}
+async function enter(user,needSA){const {data:p,error}=await sb.from('profiles').select('username,first_name,last_name,role,status').eq('id',user.id).single();const b=$('sbm');
+if(error||!p){await sb.auth.signOut();if(b)b.disabled=false;return say(t('noprof'))}
+if(p.status!=='approved'){await sb.auth.signOut();if(b)b.disabled=false;return say(t(p.status))}
+if(needSA&&p.role!=='super_admin'){await sb.auth.signOut();if(b)b.disabled=false;return say(t('notsa'))}
+S.role=p.role==='super_admin'?'super':p.role;S.me=p;S.page=S.role==='super'?'admin':'home';if(can('admin'))await loadUsers();draw()}
+async function loadUsers(){const {data}=await sb.from('profiles').select('id,username,first_name,last_name,class_name,account_type,role,status').order('created_at',{ascending:false});
+U.length=0;(data||[]).forEach(r=>U.push({id:r.id,fn:r.first_name,ln:r.last_name,un:r.username,cls:r.class_name||'',ty:r.account_type,ro:r.role==='super_admin'?'super':r.role,st:r.status}));
+if(S.role==='super'){const {data:a}=await sb.from('admin_audit_logs').select('created_at,actor,action,target').order('created_at',{ascending:false}).limit(100);AL.length=0;(a||[]).forEach(x=>AL.push([new Date(x.created_at).toLocaleString(),x.actor,x.action,x.target||'']))}}
+async function out(){if(sb)await sb.auth.signOut();S.role=null;S.me=null;S.sa=false;S.msg='';U.length=0;AL.length=0;draw()}
+function shell(){$('app').innerHTML=`<header><div class="bar"><div class="brand">Elegant <b>Challenge</b></div><nav>${NAV[S.role].map(p=>`<button class="${p===S.page?'on':''}" onclick="go('${p}')">${t(p)}</button>`).join('')}</nav><div class="ctl"><button onclick="lang()">${S.l==='uz'?'EN':'UZ'}</button><button onclick="theme()">◐</button><button onclick="out()">${t('out')}</button></div></div></header><main id="m"></main>`;page()}
+const stat=(a)=>`<div class="stats">${a.map(x=>`<div class="card"><b>${x[1]}</b>${x[0]}</div>`).join('')}</div>`;
+function page(){const p=S.page,m=$('m'),c=k=>U.filter(k).length;let h='';
+if(p==='home')h=`<h1>Elegant Challenge</h1><div class="note">${t('note')}</div>${stat([[t('stud'),c(u=>u.ty==='student'&&u.st==='approved')],[t('projects'),0],[t('challenges'),0],[t('news'),0]])}<h2>${t('projects')}</h2>${es(t('noP'))}<h2>${t('challenges')}</h2>${es(t('noC'))}<h2>${t('news')}</h2>${es(t('noN'))}`;
+if(p==='projects')h=`<h1>${t('projects')}</h1>${es(t('noP'))}`;
+if(p==='challenges')h=`<h1>${t('challenges')}</h1>${es(t('noC'))}`;
+if(p==='news')h=`<h1>${t('news')}</h1>${es(t('noN'))}`;
+if(p==='notif')h=`<h1>${t('notif')}</h1>${es(t('noX'))}`;
+if(p==='profile')h=`<h1>—</h1><p class="mu">${t('role')}: ${S.role}</p>${S.role==='student'?stat([[t('tot'),0],[t('appr'),0],[t('pnd'),0],[t('likes'),0],[t('comm'),0],[t('chal'),0],[t('ach'),0]]):''}<h2>${t('dash')}</h2>${es(t('noP'))}`;
+if(p==='zakovat')h=`<h1>${t('zakovat')}</h1><p class="mu">${t('zdesc')}</p><div class="row"><button class="btn" style="padding:14px 22px;font-size:17px" onclick="gOpen()">${t('zzstart')||t('zstart')}</button></div>${can('admin')?qMgr():''}`;
+if(p==='admin')h=`<h1>${t('admin')}</h1>${stat([[t('pend'),c(u=>u.st==='pending')],[t('stud'),c(u=>u.ty==='student')],[t('teach'),c(u=>u.ty==='teacher')],[t('susp'),c(u=>u.st==='suspended')]])}<h2>${t('pend')}</h2>${utable(U.filter(u=>u.st==='pending'),0)}`;
+if(p==='users')h=`<h1>${t('users')}</h1>${utable(U,1)}`;
+if(p==='audit')h=`<h1>${t('audit')}</h1>${AL.length?`<div class="tw"><table><tr><th>${t('when')}</th><th>${t('who')}</th><th>${t('what')}</th><th>${t('target')}</th></tr>${AL.map(a=>`<tr><td>${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td><td>${esc(a[3])}</td></tr>`).join('')}</table></div>`:es(['—'])}`;
+m.innerHTML=h}
+function utable(a,adm){if(!a.length)return es(['—']);return `<div class="tw"><table><tr><th>${t('name')}</th><th>${t('un')}</th><th>${t('cls')}</th><th>${t('role')}</th><th>${t('status')}</th><th></th></tr>${a.map(u=>`<tr><td>${esc(u.fn)} ${esc(u.ln)}</td><td>${esc(u.un)}</td><td>${esc(u.cls)||'—'}</td><td>${u.ro}</td><td>${u.st}</td><td>${u.st==='pending'?`<button class="btn" onclick="ust('${u.id}','approved')">${t('approve')}</button> <button class="btn s" onclick="ust('${u.id}','rejected')">${t('reject')}</button>`:''}${adm&&u.st==='approved'&&u.ro!=='super'&&can('super')?(u.ro==='admin'?`<button class="btn d" onclick="uadm('${u.id}',0)">${t('demote')}</button>`:`<button class="btn" onclick="uadm('${u.id}',1)">${t('promote')}</button>`):''}</td></tr>`).join('')}</table></div>`}
+const lg=()=>{};
+async function ust(id,s){if(!can('admin'))return toast(t('denied'));const {error}=await sb.rpc('set_account_status',{target:id,new_status:s});if(error)return toast(t('err'));await loadUsers();page()}
+async function uadm(id,on){if(!can('super'))return toast(t('denied'));if(!confirm(t('confirm')))return;const {error}=await sb.rpc('set_admin_role',{target:id,make_admin:!!on});if(error)return toast(t('err'));await loadUsers();page()}
+let qf={s:'',c:''};
+function qMgr(){const L=Q.filter(q=>(!qf.c||q.c===qf.c)&&q.q.toLowerCase().includes(qf.s.toLowerCase()));
+return `<h2>${t('addq')}</h2><div class="card"><label>${t('qtext')}</label><textarea id="qq" rows="2"></textarea><label>${t('ans')}</label><input type="text" id="qa"><div class="row"><select id="qc">${CATS.map(c=>`<option>${c}</option>`).join('')}</select><select id="qd"><option value="easy">${t('easy')}</option><option value="mid">${t('mid')}</option><option value="hard">${t('hard')}</option></select><input type="number" id="qt" value="30" min="5" style="width:110px" title="${t('tl')}"></div><label>${t('expl')}</label><input type="text" id="qe"><div class="row"><button class="btn" onclick="qAdd()">${t('save')}</button></div></div>
+<div class="row"><input type="text" placeholder="${t('search')}" value="${esc(qf.s)}" oninput="qf.s=this.value;qList()" style="max-width:260px"><select onchange="qf.c=this.value;qList()"><option value="">${t('all')}</option>${CATS.map(c=>`<option ${qf.c===c?'selected':''}>${c}</option>`).join('')}</select></div><div id="ql">${qL(L)}</div>`}
+const qL=L=>L.length?`<div class="tw"><table><tr><th>${t('tt')}</th><th>${t('ans')}</th><th>${t('cat')}</th><th>${t('dif')}</th><th>${t('tl')}</th><th></th></tr>${L.map(q=>`<tr><td style="white-space:normal;min-width:200px">${esc(q.q)}</td><td>${esc(q.a)}</td><td>${q.c}</td><td>${t(q.d)}</td><td>${q.t}</td><td><button class="btn s" onclick="qDel(${q.id})">${t('del')}</button></td></tr>`).join('')}</table></div>`:es(t('noQ'));
+function qList(){$('ql').innerHTML=qL(Q.filter(q=>(!qf.c||q.c===qf.c)&&q.q.toLowerCase().includes(qf.s.toLowerCase())))}
+function qAdd(){if(!can('admin'))return toast(t('denied'));const q=$('qq').value.trim(),a=$('qa').value.trim();if(!q||!a)return toast(t('bad'));Q.push({id:++qid,q,a,c:$('qc').value,d:$('qd').value,t:Math.max(5,+$('qt').value||30),e:$('qe').value.trim()});lg('question added',q.slice(0,40));page()}
+function qDel(id){if(!can('admin'))return toast(t('denied'));if(!confirm(t('confirm')))return;Q.splice(Q.findIndex(x=>x.id===id),1);lg('question deleted',id);page()}
+/* ---- Zakovat fullscreen game ---- */
+let G=null;
+function gOpen(){if(!can('teacher'))return toast(t('denied'));G={teams:[],sel:[],stage:'setup',i:0,st:'idle',end:0,left:30,got:{},form:false,dur:30};$('gm').hidden=false;$('app').hidden=true;fs();gDraw()}
+function fs(){try{const e=document.documentElement;document.fullscreenElement?document.exitFullscreen():e.requestFullscreen&&e.requestFullscreen().catch(()=>{})}catch(e){}}
+function gClose(){G=null;$('gm').hidden=true;$('app').hidden=false;try{document.fullscreenElement&&document.exitFullscreen()}catch(e){}draw()}
+const sorted=()=>[...G.teams].sort((a,b)=>b.s-a.s);
+function gDraw(){const g=$('gm');const top=`<div class="row" style="justify-content:space-between"><div class="brand">Elegant <b>Challenge</b> · ${t('zakovat')}</div><div class="ctl"><button onclick="fs()">⛶ ${t('fs')}</button><button onclick="${G.stage==='play'?'gEnd()':'gClose()'}">${G.stage==='play'?t('end'):'✕'}</button></div></div>`;
+if(G.stage==='setup'){const ok=G.teams.length&&G.sel.length;g.innerHTML=top+`<div style="max-width:900px;margin:auto"><h2>${t('teams')||'Teams'} (${G.teams.length})</h2><div class="row"><button class="btn" onclick="G.form=true;gDraw()">${t('addt')}</button></div>
+${G.form?`<div class="card"><label>${t('tname')}</label><input type="text" id="tn"><label>${t('tmem')}</label><input type="text" id="tm"><div class="row"><button class="btn" onclick="tSave()">${t('save')}</button><button class="btn s" onclick="G.form=false;gDraw()">${t('cancel')}</button></div></div>`:''}
+${G.teams.length?`<div class="grid">${G.teams.map(x=>`<div class="card"><b>${esc(x.n)}</b><div class="mu">${esc(x.m.join(', '))||'—'}</div><div>0</div><div class="row"><button class="btn s" onclick="tEdit(${x.id})">${t('edit')}</button><button class="btn s" onclick="tDel(${x.id})">${t('del')}</button></div></div>`).join('')}</div>`:es(t('noT'))}
+<h2>${t('selq')} (${G.sel.length})</h2>${Q.length?`<div class="row"><select id="gc"><option value="">${t('all')}</option>${CATS.map(c=>`<option>${c}</option>`).join('')}</select><input type="number" id="gn" value="${Math.min(10,Q.length)}" min="1" max="${Q.length}" style="width:90px" title="${t('cnt')}"><button class="btn s" onclick="qPick()">${t('pick')}</button></div>`:es(t('noQ'))}
+<div class="row"><label style="margin:0">${t('dur')}</label><input type="number" min="5" value="${G.dur}" style="width:90px" onchange="G.dur=Math.max(5,+this.value||30)"></div>
+<div class="row"><button class="btn" style="padding:14px 24px;font-size:17px" ${ok?'':'disabled'} onclick="gGo()">${t('begin')}</button></div></div>`;return}
+if(G.stage==='play'){const q=G.sel[G.i],rv=G.st==='revealed',up=G.st==='up'||rv;
+g.innerHTML=top+`<div style="max-width:1100px;margin:auto"><div class="mu" style="text-align:center">${G.i+1} / ${G.sel.length} · ${q.c}</div><div class="qt">${esc(q.q)}</div><div class="big" id="tm" ${up?'style="color:var(--er);font-size:min(12vw,110px)"':''}>${up?t('up'):tv()}</div>
+<div class="row" style="justify-content:center"><button class="btn" ${G.st!=='idle'?'disabled':''} onclick="zs()">${t('start')}</button><button class="btn s" ${G.st!=='running'?'disabled':''} onclick="zp()">${t('pause')}</button><button class="btn s" ${G.st!=='paused'?'disabled':''} onclick="zr()">${t('resume')}</button><button class="btn s" ${G.st!=='up'?'disabled':''} onclick="zv()">${t('reveal')}</button><button class="btn s" onclick="zn(-1)">${t('prev')}</button><button class="btn s" onclick="zn(1)">${G.i===G.sel.length-1?t('end'):t('next')}</button></div>
+${rv?`<div class="qt ok">${esc(q.a)}</div>${q.e?`<div class="mu" style="text-align:center">${esc(q.e)}</div>`:''}`:''}
+<div class="sc">${G.teams.map(x=>{const k=q.id+'-'+x.id,on=G.got[k];return `<div class="card"><div>${esc(x.n)}</div><b>${x.s}</b>${rv?`<button class="btn ${on?'s':''}" onclick="zpt(${x.id})">${on?t('ptundo'):t('ptadd')}</button>`:''}</div>`}).join('')}</div></div>`;return}
+const r=sorted();g.innerHTML=top+`<div style="max-width:800px;margin:auto"><div class="qt">${t('winner')}: ${r.length?esc(r[0].n):'—'}</div><div class="tw"><table>${r.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.n)}</td><td><b>${x.s}</b></td></tr>`).join('')}</table></div><div class="note">${t('unsaved')}</div><div class="row"><button class="btn" onclick="gClose()">${t('close')}</button></div></div>`}
+function tSave(){const n=$('tn').value.trim();if(!n)return toast(t('bad'));G.teams.push({id:++tid,n,m:$('tm').value.split(',').map(s=>s.trim()).filter(Boolean),s:0});G.form=false;gDraw()}
+function tEdit(id){const x=G.teams.find(y=>y.id===id),n=prompt(t('tname'),x.n);if(n&&n.trim())x.n=n.trim();const m=prompt(t('tmem'),x.m.join(', '));if(m!==null)x.m=m.split(',').map(s=>s.trim()).filter(Boolean);gDraw()}
+function tDel(id){if(confirm(t('confirm'))){G.teams=G.teams.filter(x=>x.id!==id);gDraw()}}
+function qPick(){const c=$('gc').value,n=Math.max(1,+$('gn').value||1);G.sel=Q.filter(q=>!c||q.c===c).slice(0,n);gDraw()}
+function gGo(){G.stage='play';G.i=0;G.st='idle';G.left=G.sel[0].t||G.dur;G.got={};gDraw()}
+const tv=()=>G.st==='running'?Math.max(0,Math.ceil((G.end-Date.now())/1000)):G.left;
+function zs(){G.st='running';G.end=Date.now()+G.left*1000;gDraw()}
+function zp(){G.left=tv();G.st='paused';gDraw()}
+function zr(){G.st='running';G.end=Date.now()+G.left*1000;gDraw()}
+function zv(){G.st='revealed';gDraw()}
+function zn(d){const j=G.i+d;if(j>=G.sel.length)return gEnd();if(j<0)return;G.i=j;G.st='idle';G.left=G.sel[j].t||G.dur;gDraw()}
+function zpt(id){const q=G.sel[G.i],k=q.id+'-'+id,x=G.teams.find(y=>y.id===id);if(G.got[k]){G.got[k]=0;x.s--}else{G.got[k]=1;x.s++}gDraw()}
+function gEnd(){if(confirm(t('confirm'))){G.stage='end';gDraw()}}
+setInterval(()=>{if(G&&G.stage==='play'&&G.st==='running'){if(Date.now()>=G.end){G.st='up';gDraw()}else{const e=$('tm');if(e)e.textContent=tv()}}},250);
+(async()=>{if(sb){const {data}=await sb.auth.getSession();if(data.session){await enter(data.session.user,false);return}}draw()})();
+</script></body></html>
