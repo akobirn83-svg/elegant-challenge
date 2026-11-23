@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elegant Challenge — Kirish</title>
+<style>
+:root{
+  --bg:#0B0B1A; --panel:#17142E; --panel2:#1D1A38; --purple:#6D28D9;
+  --purple2:#4C1D95; --gold:#F5B52E; --blue:#2563EB; --text:#F6F4FF;
+  --muted:#B8B4D0; --line:rgba(191,180,255,.17); --green:#34D399;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:
+ radial-gradient(ellipse at 10% 10%,rgba(109,40,217,.23),transparent 38%),
+ radial-gradient(ellipse at 90% 80%,rgba(37,99,235,.14),transparent 35%),var(--bg);
+ color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+.page{min-height:100vh;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);max-width:1250px;margin:auto;padding:28px;gap:28px}
+.brand-side{display:flex;flex-direction:column;justify-content:center;padding:clamp(20px,5vw,65px);position:relative;overflow:hidden}
+.brand-side:before{content:"";position:absolute;width:460px;height:460px;border:1px solid rgba(167,139,250,.15);border-radius:50%;left:-150px;bottom:-200px;box-shadow:0 0 0 45px rgba(109,40,217,.04),0 0 0 90px rgba(109,40,217,.03)}
+.brand{font-weight:900;letter-spacing:.14em;color:#C4B5FD;font-size:clamp(18px,2vw,24px)}
+.brand span{color:var(--gold)}
+.hero-title{font-size:clamp(38px,5vw,66px);line-height:1.04;margin:26px 0 18px;font-weight:850;letter-spacing:-.04em}
+.hero-title .accent{background:linear-gradient(100deg,#C4B5FD,#8B5CF6,#F5B52E);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-copy{max-width:510px;color:var(--muted);font-size:17px;line-height:1.7}
+.pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.pill{border:1px solid var(--line);background:rgba(23,20,46,.7);border-radius:999px;padding:9px 13px;color:#DCD5FF;font-size:13px}
+.motto{margin-top:50px;color:#9088B3;letter-spacing:.16em;font-size:12px}
+.auth-wrap{display:flex;align-items:center;justify-content:center}
+.auth-card{width:100%;max-width:490px;background:linear-gradient(145deg,rgba(29,26,56,.96),rgba(18,16,35,.97));border:1px solid var(--line);border-radius:24px;padding:clamp(22px,4vw,34px);box-shadow:0 22px 75px rgba(0,0,0,.36),0 0 35px rgba(109,40,217,.08)}
+.card-brand{display:none;text-align:center;margin-bottom:20px}
+.card-title{font-size:26px;font-weight:800;margin:0 0 8px}
+.card-sub{margin:0 0 23px;color:var(--muted);font-size:14px;line-height:1.5}
+.switcher{display:grid;grid-template-columns:1fr 1fr;background:#0F0D22;border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:22px}
+.switcher button{border:0;border-radius:9px;background:transparent;color:var(--muted);padding:11px;font-weight:700;cursor:pointer}
+.switcher button.active{background:linear-gradient(110deg,var(--purple2),var(--purple));color:white;box-shadow:0 5px 18px rgba(109,40,217,.28)}
+.form{display:flex;flex-direction:column;gap:13px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field label{display:block;color:#D6D0EE;font-size:13px;font-weight:650;margin:0 0 7px}
+.field input,.field select{width:100%;border:1px solid rgba(191,180,255,.18);background:#100E23;color:var(--text);border-radius:11px;padding:12px 13px;outline:none;font-size:14px;transition:.18s}
+.field input:focus,.field select:focus{border-color:#9B72F5;box-shadow:0 0 0 3px rgba(109,40,217,.16)}
+.field input::placeholder{color:#716B91}
+.field select option{background:#17142E}
+.primary{border:0;border-radius:12px;background:linear-gradient(110deg,#5B21B6,#7C3AED);color:#fff;padding:14px;font-size:15px;font-weight:800;cursor:pointer;margin-top:5px;box-shadow:0 9px 22px rgba(109,40,217,.22);transition:.18s}
+.primary:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.primary:disabled{opacity:.6;cursor:wait;transform:none}
+.note{font-size:12px;color:#9992B7;line-height:1.5;margin:2px 0 0}
+.status{display:none;padding:12px;border-radius:10px;font-size:13px;line-height:1.5;margin-bottom:14px}
+.status.show{display:block}.status.ok{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);color:#A7F3D0}
+.status.err{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);color:#FCA5A5}
+.hidden{display:none!important}
+.dashboard{display:none;text-align:center}
+.dashboard h2{font-size:28px}
+.dashboard p{color:var(--muted);line-height:1.6}
+.dashboard .primary{width:100%}
+@media(max-width:850px){.page{grid-template-columns:1fr;padding:16px;gap:10px}.brand-side{padding:18px 10px 8px}.hero-title{font-size:42px;margin:18px 0 10px}.hero-copy{font-size:15px}.pills{margin-top:16px}.motto{margin-top:20px}.auth-wrap{padding:12px 0 24px}.auth-card{max-width:560px}.card-brand{display:block}}
+@media(max-width:480px){.page{padding:12px}.brand-side{padding:10px 4px}.hero-title{font-size:35px}.hero-copy{font-size:14px}.grid2{grid-template-columns:1fr}.auth-card{padding:21px;border-radius:19px}.card-title{font-size:23px}}
+
+/* Elegant Challenge home dashboard */
+.dashboard{display:none;text-align:left;width:100%;max-width:none}.page.home-active{display:block;max-width:none;padding:0;margin:0}.page.home-active .auth-wrap{display:block;padding:0}.page.home-active .auth-card{max-width:none;width:100%;min-height:100vh;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.home-shell{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh;width:100%;max-width:1440px;margin:0 auto}
+.home-sidebar{position:sticky;top:0;height:100vh;padding:24px 16px;background:rgba(14,12,29,.88);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:24px;backdrop-filter:blur(18px)}
+.home-logo{font-weight:900;letter-spacing:.12em;color:#C4B5FD;padding:4px 10px;font-size:17px}
+.home-logo span{color:var(--gold)}
+.sidebar-label{font-size:11px;color:#827B9F;letter-spacing:.14em;padding:0 10px;margin:0 0 4px}
+.sidebar-nav{display:flex;flex-direction:column;gap:6px}
+.nav-item{border:1px solid transparent;background:transparent;color:#B8B4D0;border-radius:12px;padding:12px 13px;display:flex;align-items:center;gap:12px;text-align:left;font-weight:700;cursor:pointer;transition:.18s}
+.nav-item:hover{background:rgba(109,40,217,.12);color:#F6F4FF}
+.nav-item.active{background:linear-gradient(110deg,rgba(91,33,182,.38),rgba(124,58,237,.18));border-color:rgba(167,139,250,.25);color:white;box-shadow:inset 0 0 18px rgba(109,40,217,.08)}
+.nav-icon{width:22px;text-align:center;font-size:17px}
+.sidebar-bottom{margin-top:auto;border-top:1px solid var(--line);padding-top:16px}
+.user-mini{display:flex;gap:10px;align-items:center;padding:8px 10px;color:#D8D3EF}
+.avatar{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#6D28D9,#2563EB);display:grid;place-items:center;font-weight:900;color:white;flex-shrink:0}
+.user-mini small{display:block;color:#928BAF;font-size:12px;margin-top:3px}
+.home-main{padding:30px clamp(16px,3vw,42px);min-width:0}
+.home-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px}
+.home-eyebrow{color:#A99DE0;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.home-title{font-size:clamp(24px,3vw,36px);font-weight:850;margin:7px 0 5px;letter-spacing:-.03em}
+.home-subtitle{color:var(--muted);margin:0;font-size:14px}
+.top-actions{display:flex;gap:10px;align-items:center}
+.icon-button{width:42px;height:42px;border:1px solid var(--line);background:rgba(23,20,46,.75);border-radius:13px;color:#EAE6FF;cursor:pointer}
+.hero-home{position:relative;overflow:hidden;border:1px solid rgba(167,139,250,.23);border-radius:24px;padding:clamp(22px,3vw,36px);background:linear-gradient(120deg,rgba(76,29,149,.65),rgba(29,26,56,.88) 60%,rgba(37,99,235,.22));box-shadow:0 20px 50px rgba(0,0,0,.18);margin-bottom:24px}
+.hero-home:after{content:"✦";position:absolute;right:5%;top:12%;font-size:110px;color:rgba(245,181,46,.1);text-shadow:0 0 50px rgba(245,181,46,.1)}
+.hero-home h2{font-size:clamp(24px,3vw,34px);margin:0 0 12px;max-width:650px;line-height:1.2}
+.hero-home p{color:#D4CDEF;max-width:610px;line-height:1.65;margin:0 0 20px}
+.hero-buttons{display:flex;flex-wrap:wrap;gap:10px}
+.hero-btn{border:1px solid rgba(255,255,255,.16);background:linear-gradient(110deg,#6D28D9,#7C3AED);color:white;padding:12px 17px;border-radius:12px;font-weight:800;cursor:pointer}
+.hero-btn.secondary{background:rgba(12,10,25,.3);color:#E7E1FF}
+.home-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:22px 0 28px}
+.stat-card{background:linear-gradient(145deg,rgba(29,26,56,.92),rgba(17,15,34,.95));border:1px solid var(--line);border-radius:17px;padding:18px}
+.stat-top{display:flex;justify-content:space-between;color:#A8A1C8;font-size:13px;align-items:center}
+.stat-number{font-size:27px;font-weight:850;margin-top:10px}
+.stat-symbol{background:rgba(109,40,217,.18);border:1px solid rgba(167,139,250,.18);width:35px;height:35px;border-radius:11px;display:grid;place-items:center}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:25px 0 14px}
+.section-head h3{margin:0;font-size:19px}
+.text-link{background:none;border:0;color:#BCA7FF;font-weight:800;cursor:pointer}
+.challenge-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.challenge-card{background:linear-gradient(145deg,rgba(29,26,56,.94),rgba(17,15,34,.95));border:1px solid var(--line);border-radius:18px;padding:19px;position:relative;overflow:hidden;transition:.18s}
+.challenge-card:hover{transform:translateY(-2px);border-color:rgba(167,139,250,.4)}
+.challenge-card:before{content:"";position:absolute;width:130px;height:130px;right:-60px;top:-65px;border-radius:50%;background:var(--glow,rgba(109,40,217,.15));filter:blur(5px)}
+.challenge-tag{display:inline-flex;border:1px solid rgba(167,139,250,.22);background:rgba(109,40,217,.13);color:#CFC2FF;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800}
+.challenge-card h4{font-size:18px;margin:13px 0 7px}
+.challenge-card p{font-size:13px;color:var(--muted);line-height:1.55;margin:0 0 16px}
+.challenge-footer{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.challenge-meta{font-size:12px;color:#A9A2C7}
+.card-open{border:1px solid rgba(167,139,250,.25);background:rgba(109,40,217,.14);color:#E6DEFF;border-radius:10px;padding:9px 12px;font-weight:800;cursor:pointer}
+.home-view{display:none}
+.home-view.active{display:block}
+.empty-panel{border:1px dashed rgba(191,180,255,.22);background:rgba(23,20,46,.35);border-radius:18px;padding:28px;color:var(--muted);line-height:1.6}
+.toast-home{display:none;position:fixed;right:20px;bottom:20px;z-index:10;background:#20183D;border:1px solid rgba(167,139,250,.3);padding:14px 17px;border-radius:13px;color:#E8E1FF;box-shadow:0 10px 30px #0005}
+.toast-home.show{display:block}
+@media(max-width:900px){.home-shell{grid-template-columns:78px minmax(0,1fr)}.home-sidebar{padding:18px 9px;align-items:center}.home-logo{font-size:0;padding:0}.home-logo:before{content:"EC";font-size:16px}.sidebar-label{display:none}.nav-item{justify-content:center;padding:12px 9px;width:56px}.nav-item .nav-text{display:none}.sidebar-bottom{width:100%}.user-mini{justify-content:center;padding:6px}.user-mini .user-mini-text{display:none}}
+@media(max-width:620px){.home-shell{grid-template-columns:1fr}.home-sidebar{position:fixed;top:auto;bottom:0;left:0;right:0;height:auto;z-index:20;border-right:0;border-top:1px solid var(--line);padding:8px;background:rgba(12,10,25,.96);flex-direction:row;justify-content:space-around;gap:4px}.home-logo,.sidebar-label,.sidebar-bottom{display:none}.sidebar-nav{flex-direction:row;width:100%;justify-content:space-around}.nav-item{width:auto;flex:1;flex-direction:column;gap:3px;padding:8px 4px;font-size:10px}.nav-item .nav-icon{font-size:18px}.nav-item .nav-text{display:block}.home-main{padding:20px 14px 90px}.home-top{align-items:flex-start}.home-stats{gap:8px}.stat-card{padding:12px}.stat-number{font-size:22px}.stat-top{font-size:11px}.challenge-grid{grid-template-columns:1fr}.hero-home{padding:22px}.top-actions .icon-button:nth-child(2){display:none}}
+
+
+/* Challenge image-style covers and user management foundation */
+.challenge-card{padding:0}
+.challenge-cover{height:145px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border-radius:17px 17px 0 0;font-size:64px}
+.challenge-cover:before,.challenge-cover:after{content:"";position:absolute;border-radius:50%;filter:blur(2px);opacity:.35}
+.challenge-cover:before{width:190px;height:190px;right:-40px;top:-80px;border:1px solid rgba(255,255,255,.4);box-shadow:0 0 0 22px rgba(255,255,255,.04),0 0 0 48px rgba(255,255,255,.03)}
+.challenge-cover:after{width:120px;height:120px;left:-45px;bottom:-55px;background:rgba(255,255,255,.14)}
+.cover-story{background:linear-gradient(130deg,#25114b,#6d28d9 55%,#c084fc)}
+.cover-quiz{background:linear-gradient(130deg,#0c204a,#2563eb 55%,#6d28d9)}
+.cover-art{background:linear-gradient(130deg,#422006,#b45309 52%,#f5b52e)}
+.cover-photo{background:linear-gradient(130deg,#0f172a,#334155 45%,#a78bfa)}
+.challenge-cover .cover-symbol{position:relative;z-index:1;text-shadow:0 8px 24px rgba(0,0,0,.35);transform:rotate(-5deg)}
+.challenge-card .challenge-body{padding:17px 19px 19px}
+.user-management{display:grid;gap:16px}
+.user-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.user-tab{border:1px solid var(--line);background:#100e23;color:#c7c1e4;border-radius:11px;padding:10px 13px;font-weight:750;cursor:pointer}
+.user-tab.active{background:linear-gradient(110deg,#5b21b6,#7c3aed);color:#fff}
+.user-toolbar{display:flex;gap:10px;flex-wrap:wrap}
+.user-search{flex:1;min-width:180px;border:1px solid var(--line);background:#100e23;color:#f6f4ff;border-radius:11px;padding:11px 13px}
+.user-list{display:grid;gap:10px}
+.user-row{display:flex;align-items:center;gap:12px;justify-content:space-between;background:linear-gradient(145deg,rgba(29,26,56,.92),rgba(17,15,34,.95));border:1px solid var(--line);border-radius:14px;padding:13px;flex-wrap:wrap}
+.user-row-main{display:flex;align-items:center;gap:10px;min-width:0}
+.user-row-info{min-width:0}.user-row-info strong{display:block}.user-row-info small{color:var(--muted)}
+.user-status{font-size:11px;border:1px solid var(--line);border-radius:999px;padding:5px 8px;color:#d5caff}
+.user-actions{display:flex;gap:7px;flex-wrap:wrap}
+.user-action{border:1px solid var(--line);background:rgba(109,40,217,.14);color:#e9e2ff;border-radius:9px;padding:8px 10px;cursor:pointer;font-weight:700}
+.user-action.warn{background:rgba(245,181,46,.12);color:#f9d879}.user-action.danger{background:rgba(248,113,113,.1);color:#fca5a5}
+.admin-add-panel{border:1px solid rgba(245,181,46,.24);background:rgba(245,181,46,.06);padding:15px;border-radius:15px}
+.admin-add-panel h4{margin:0 0 8px}.admin-add-panel p{color:var(--muted);font-size:13px;line-height:1.5;margin:0}
+@media(max-width:620px){.challenge-cover{height:125px}.challenge-card .challenge-body{padding:15px}.user-row{align-items:flex-start}}
+
+
+.contest-modal{display:none;position:fixed;inset:0;z-index:100;background:rgba(4,3,12,.78);backdrop-filter:blur(8px);padding:18px;overflow:auto;align-items:flex-start;justify-content:center}
+.contest-modal.open{display:flex}.contest-modal-panel{position:relative;width:min(850px,100%);margin:24px auto;background:linear-gradient(145deg,#1d1a38,#100e22);border:1px solid rgba(191,180,255,.25);border-radius:22px;padding:clamp(20px,4vw,34px);box-shadow:0 25px 80px #0008;color:#f6f4ff}
+.contest-close{position:sticky;float:right;top:0;border:1px solid var(--line);background:#251d44;color:#fff;border-radius:10px;width:38px;height:38px;font-size:24px;cursor:pointer;z-index:2}
+.contest-modal h2{margin:4px 45px 8px 0;font-size:clamp(22px,4vw,30px)}.contest-modal h3{margin:22px 0 9px;color:#d9ccff;font-size:17px}.contest-modal p,.contest-modal li{color:#d0cbe5;line-height:1.65;font-size:14px}.contest-modal ul,.contest-modal ol{padding-left:22px}.contest-modal .contest-dates{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}.contest-modal .contest-dates span{padding:8px 11px;border-radius:10px;background:rgba(109,40,217,.18);border:1px solid var(--line);color:#e7deff;font-size:13px}.contest-modal .score-table{width:100%;border-collapse:collapse;margin:8px 0 14px}.contest-modal .score-table th,.contest-modal .score-table td{text-align:left;border-bottom:1px solid var(--line);padding:9px 8px;color:#d8d2ee;font-size:13px}.contest-modal .score-table th{color:#c8b8ff}.contest-modal .muted-rule{color:#aaa2c8;font-size:12px}
+@media(max-width:620px){.contest-modal{padding:8px}.contest-modal-panel{margin:8px auto;border-radius:16px;padding:18px}.contest-modal .score-table th,.contest-modal .score-table td{font-size:12px;padding:7px 5px}}
+
+ .contest-participate-wrap{display:flex;justify-content:center;margin-top:24px;padding-top:18px;border-top:1px solid var(--line)}.contest-participate-btn{min-width:190px;padding:13px 28px;font-weight:700}
+
+/* Polished contest file picker and join-success dialog */
+[data-submission-form] label{display:grid;gap:8px;color:#DCD6F4;font-weight:700;font-size:13px}
+[data-submission-form] input[type="file"]{width:100%;display:block;min-width:0;border:1px solid rgba(167,139,250,.25);border-radius:13px;padding:10px;background:linear-gradient(145deg,rgba(16,14,35,.96),rgba(29,26,56,.92));color:#BEB6DD;font-size:13px;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.025);}
+[data-submission-form] input[type="file"]::file-selector-button{border:0;border-radius:9px;padding:10px 14px;margin:0 12px 0 0;background:linear-gradient(110deg,#5B21B6,#7C3AED);color:#fff;font-weight:800;cursor:pointer;transition:.18s;}
+[data-submission-form] input[type="file"]::file-selector-button:hover{filter:brightness(1.15)}
+[data-submission-form] textarea{width:100%;max-width:100%;border:1px solid rgba(167,139,250,.24);background:rgba(12,10,25,.68);color:#F6F4FF;border-radius:13px;outline:none;font:inherit;line-height:1.6;resize:vertical;transition:.2s;}
+[data-submission-form] textarea:focus{border-color:#A78BFA;box-shadow:0 0 0 3px rgba(124,58,237,.16)}
+.join-confirmation{position:relative;overflow:hidden;text-align:center;padding:clamp(26px,5vw,42px) clamp(16px,3vw,28px);border:1px solid rgba(167,139,250,.22);border-radius:20px;background:radial-gradient(ellipse at 50% 0,rgba(124,58,237,.2),transparent 60%),linear-gradient(145deg,#211a42,#111023);}
+.join-confirmation:before{content:"";position:absolute;width:190px;height:190px;left:50%;top:-130px;transform:translateX(-50%);border-radius:50%;background:rgba(139,92,246,.16);filter:blur(20px);pointer-events:none}
+.join-success-icon{position:relative;display:grid;place-items:center;width:66px;height:66px;margin:0 auto 15px;border-radius:22px;background:linear-gradient(145deg,rgba(52,211,153,.2),rgba(16,185,129,.07));border:1px solid rgba(52,211,153,.35);color:#6EE7B7;font-size:34px;font-weight:900;box-shadow:0 10px 35px rgba(16,185,129,.08)}
+.join-kicker{color:#B7A4FF;font-size:10px;font-weight:900;letter-spacing:.2em;margin-bottom:8px}
+.join-confirmation h2{margin:0 0 10px!important;font-size:clamp(23px,4vw,30px)!important}
+.join-message{max-width:520px;margin:0 auto;color:#D3CDEA;line-height:1.75;font-size:14px}
+.join-actions{display:flex;flex-direction:column;gap:10px;max-width:330px;margin:24px auto 0}
+.join-profile-btn,.join-close-btn{display:flex;justify-content:center;align-items:center;gap:9px;width:100%;border-radius:12px;padding:13px 17px;font-size:14px;font-weight:850;cursor:pointer;transition:.18s}
+.join-profile-btn{border:0;color:white;background:linear-gradient(110deg,#6D28D9,#8B5CF6);box-shadow:0 8px 24px rgba(109,40,217,.24)}
+.join-profile-btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.join-close-btn{border:1px solid rgba(191,180,255,.2);color:#DCD6F4;background:rgba(255,255,255,.035)}
+.join-close-btn:hover{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.38);color:white}
+@media(max-width:480px){[data-submission-form] input[type="file"]{font-size:12px;padding:8px}[data-submission-form] input[type="file"]::file-selector-button{padding:9px 11px;margin-right:8px}.join-actions{max-width:none}}
+
+
+.review-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.review-tab{border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:rgba(255,255,255,.04);color:#DCD6F4;cursor:pointer;font-weight:750}.review-tab.active{background:linear-gradient(110deg,#6D28D9,#8B5CF6);color:#fff;border-color:transparent}.review-card{border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;background:rgba(255,255,255,.035)}.review-meta{color:#A99DE0;font-size:13px;margin:6px 0 12px}.review-file{display:inline-flex;margin:8px 0;padding:9px 12px;border-radius:10px;background:rgba(139,92,246,.13);color:#DCD6F4;text-decoration:none}.review-card textarea,.review-card input,.review-card select{width:100%;box-sizing:border-box;margin:6px 0 10px;padding:11px;border-radius:10px;border:1px solid var(--line);background:#17132B;color:#fff}.review-card .primary{margin-top:6px}.review-empty{padding:18px;border:1px dashed var(--line);border-radius:14px;color:#A99DE0}
+
+/* Project gallery social UI polish */
+.project-social{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:15px;padding-top:13px;border-top:1px solid var(--line)}
+.project-like-btn,.project-comment-toggle{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(167,139,250,.2);background:rgba(109,40,217,.1);color:#E9E3FF;border-radius:12px;padding:9px 13px;font-weight:750;cursor:pointer;transition:.18s}
+.project-like-btn:hover,.project-comment-toggle:hover{background:rgba(109,40,217,.22);border-color:rgba(167,139,250,.38);transform:translateY(-1px)}
+.project-comment-toggle{background:rgba(255,255,255,.025);color:#C9C2E6}
+.toggle-chevron{font-size:15px;color:#A99DE0;margin-left:2px}
+.project-comment-panel{margin-top:11px;padding:13px;border:1px solid var(--line);border-radius:14px;background:rgba(12,10,25,.38);animation:commentPanelIn .18s ease-out}.project-comment-panel[hidden],.project-comment-panel.hidden{display:none!important}
+.project-comments{max-height:280px;overflow:auto}
+.project-comment-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;align-items:stretch;margin-top:12px;width:100%;min-width:0}
+.project-comment-form textarea{display:block;width:100%;box-sizing:border-box;flex:1;min-width:0;resize:vertical;min-height:44px;max-height:160px;border:1px solid rgba(191,180,255,.22);border-radius:12px;background:#100E23;color:var(--text);padding:11px 13px;font:inherit;line-height:1.5;outline:none;transition:.18s}
+.project-comment-form textarea:focus{border-color:#9B72F5;box-shadow:0 0 0 3px rgba(109,40,217,.14)}
+.project-comment-form textarea::placeholder{color:#777091}
+.project-comment-form .primary{margin:0;padding:0 18px;white-space:nowrap;border-radius:12px;min-width:120px;align-self:stretch}
+@keyframes commentPanelIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:520px){.project-comment-form{grid-template-columns:1fr}.project-comment-form .primary{padding:12px;min-width:0}}
+
+
+/* Comment typography hierarchy: comment content takes focus over author metadata */
+.project-comment-item{padding:12px 2px;border-bottom:1px solid var(--line)}
+.project-comment-author{display:flex;align-items:center;gap:7px;margin-bottom:5px;color:#B8B4D0;font-size:13px;font-weight:600}
+.project-comment-author strong{font-size:13px;font-weight:650;color:#C7C1E4}
+.project-comment-author small{font-size:11px;color:#817A9E}
+.project-comment-text{white-space:pre-wrap;overflow-wrap:anywhere;margin:2px 0 6px;font-size:16px;line-height:1.65;color:#F1EDFF;font-weight:400}
+.project-comment-time{font-size:11px;color:#817A9E}
+@media(max-width:520px){.project-comment-text{font-size:15px;line-height:1.6}.project-comment-author{font-size:12px}}
+\n
+.countdown-label{display:block;margin:9px 0 2px;font-size:13px;font-weight:750;color:#A7F3D0}
+.zakovat-board-wrap{overflow:auto;border:2px solid #C99A36;border-radius:18px;background:#F7F0DF;box-shadow:0 12px 35px rgba(0,0,0,.2)}
+.zakovat-board-table{width:100%;border-collapse:collapse;min-width:860px;color:#102448}
+.zakovat-board-table th,.zakovat-board-table td{padding:12px 10px;text-align:center;border:1px solid #102448;white-space:nowrap}
+.zakovat-board-table thead tr:first-child th{background:#102448;color:#F4D36D;font-size:15px;letter-spacing:.02em}
+.zakovat-board-table thead tr:nth-child(2) th{background:#F4D36D;color:#102448;font-size:13px}
+.zakovat-board-table tbody td{background:#F7F0DF;color:#102448;font-weight:700}
+.zakovat-board-table tbody tr:nth-child(even) td{background:#EFE4CE}
+.zakovat-board-table td:first-child,.zakovat-board-table th:first-child{text-align:center}
+.zakovat-board-table tr:last-child td{border-bottom:0}
+.zakovat-board-table .team-name-cell{text-align:left;min-width:150px;font-weight:850}
+.zakovat-board-table .score-input{width:58px;min-width:48px;padding:7px 4px;border:1px solid #C99A36;border-radius:5px;background:#FFFCF5;color:#102448;text-align:center;font-weight:800}
+.zakovat-board-table .total-cell{background:#E7D5A8!important;font-weight:900;color:#102448}
+.zakovat-admin-controls{border:1px solid var(--line);border-radius:14px;padding:15px;margin-top:14px}
+.zakovat-admin-controls input,.zakovat-admin-controls select{background:#100E23;color:var(--text);border:1px solid var(--line);padding:10px;border-radius:9px;margin:4px;max-width:100%}
+.zakovat-admin-controls .user-action{margin:4px}
+</style>
+<meta name="ec-version" content="v27"><!-- v27: v26 prizes plus admin story-copy and photo/video download tools in review panel -->
+</head>
+<body>
+<div class="page">
+  <section class="brand-side">
+    <div class="brand">ELEGANT <span>CHALLENGE</span></div>
+    <h1 class="hero-title">Orzu qil.<br><span class="accent">Yarat.</span><br>Raqobat qil.</h1>
+    <p class="hero-copy">Bilim, ijod va g‘oyalar birlashadigan makon. O‘z imkoniyatingni namoyon qil, yangi tanlovlarda qatnash va jamoang bilan yutuqlarga erish.</p>
+    <div class="pills"><span class="pill">✦ Ijodiy tanlovlar</span><span class="pill">♟ Bilim bellashuvlari</span></div>
+    <div class="motto">BILIM · IJOD · IMKONIYAT</div>
+  </section>
+  <section class="auth-wrap">
+    <div class="auth-card" id="authCard">
+      <div class="card-brand"><div class="brand">ELEGANT <span>CHALLENGE</span></div></div>
+      <div class="switcher"><button id="registerTab" class="active" type="button">Ro‘yxatdan o‘tish</button><button id="loginTab" type="button">Kirish</button></div>
+      <div id="message" class="status"></div>
+      <form id="registerForm" class="form">
+        <h2 class="card-title">Platformaga qo‘shiling</h2>
+        <p class="card-sub">Akkaunt yaratish uchun ma’lumotlaringizni kiriting.</p>
+        <div class="grid2">
+          <div class="field"><label for="firstName">Ism</label><input id="firstName" autocomplete="given-name" placeholder="Ismingiz" required maxlength="60"></div>
+          <div class="field"><label for="lastName">Familiya</label><input id="lastName" autocomplete="family-name" placeholder="Familiyangiz" required maxlength="60"></div>
+        </div>
+        <div class="field"><label for="username">Foydalanuvchi nomi</label><input id="username" autocomplete="username" placeholder="Masalan: akobir" required minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" title="Faqat lotin harflari, raqamlar va _ belgisi"></div>
+        <div class="field"><label for="password">Parol</label><input id="password" type="password" autocomplete="new-password" placeholder="Kamida 8 belgi" required minlength="8"></div>
+        <div class="field"><label for="confirmPassword">Parolni qayta kiriting</label><input id="confirmPassword" type="password" autocomplete="new-password" placeholder="Parolni tasdiqlang" required minlength="8"></div>
+        <div class="field"><label for="accountType">Hisob turi</label><select id="accountType" required><option value="student">O‘quvchi</option><option value="teacher">O‘qituvchi</option></select></div>
+        <div class="field" id="classField"><label for="className">Sinf</label><select id="className"><option value="">Sinfni tanlang</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option></select></div>
+        <button class="primary" type="submit" id="registerButton">Ro‘yxatdan o‘tish</button>
+        <p class="note">Ro‘yxatdan o‘tganingizdan keyin akkaunt tasdiqlanishi talab qilinishi mumkin.</p>
+      </form>
+      <form id="loginForm" class="form hidden">
+        <h2 class="card-title">Xush kelibsiz!</h2>
+        <p class="card-sub">Akkauntingizga kirish uchun ma’lumotlarni kiriting.</p>
+        <div class="field"><label for="loginUsername">Foydalanuvchi nomi</label><input id="loginUsername" autocomplete="username" placeholder="Username" required></div>
+        <div class="field"><label for="loginPassword">Parol</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Parol" required></div>
+        <button class="primary" type="submit" id="loginButton">Kirish</button>
+        <p class="note">Parolingizni hech kimga bermang.</p>
+      </form>
+      
+      <div id="dashboard" class="dashboard">
+        <div class="home-shell">
+          <aside class="home-sidebar">
+            <div class="home-logo">ELEGANT <span>CHALLENGE</span></div>
+            <div>
+              <p class="sidebar-label">MENYU</p>
+              <nav class="sidebar-nav">
+                <button class="nav-item active" data-view="home"><span class="nav-icon">⌂</span><span class="nav-text">Bosh sahifa</span></button>
+                <button class="nav-item" data-view="challenges"><span class="nav-icon">✦</span><span class="nav-text">Tanlovlar</span></button>
+                <button class="nav-item" data-view="projects"><span class="nav-icon">▣</span><span class="nav-text">Loyihalar</span></button>
+                <button class="nav-item" data-view="profile"><span class="nav-icon">◉</span><span class="nav-text">Profil</span></button>
+                <button class="nav-item" data-view="notifications"><span class="nav-icon">♧</span><span class="nav-text">Bildirishnomalar</span></button>
+                <button class="nav-item" data-view="users" id="usersNav" style="display:none"><span class="nav-icon">♙</span><span class="nav-text">Foydalanuvchilar</span></button>
+
+              </nav>
+            </div>
+            <div class="sidebar-bottom">
+              <div class="user-mini">
+                <div class="avatar" id="homeAvatar">E</div>
+                <div class="user-mini-text"><strong id="homeUserName">Foydalanuvchi</strong><small id="homeUserRole">Akkaunt</small></div>
+              </div>
+              <button class="nav-item" id="homeLogout" style="width:100%;margin-top:10px"><span class="nav-icon">↪</span><span class="nav-text">Chiqish</span></button>
+            </div>
+          </aside>
+          <main class="home-main">
+            <div class="home-top">
+              <div><div class="home-eyebrow">BILIM · IJOD · IMKONIYAT</div><h1 class="home-title" id="greetingTitle">Xush kelibsiz!</h1><p class="home-subtitle">Bugun yangi g‘oya va imkoniyatlar sari qadam tashlang.</p></div>
+              <div class="top-actions"><button class="icon-button" title="Bildirishnomalar" data-view="notifications">♧</button><button class="icon-button" title="Profil" data-view="profile">◉</button></div>
+            </div>
+            <section class="home-view active" id="view-home">
+              <div class="hero-home">
+                <h2>Orzu qil. <span style="color:#D8C7FF">Yarat.</span> Raqobat qil.</h2>
+                <p>Elegant Challenge — iste’dod, bilim va ijod uchun makon. Tanlovlarda qatnash, o‘z ishlaringni namoyish et va yangi imkoniyatlarni kashf qil.</p>
+                <div class="hero-buttons"><button class="hero-btn" data-view="challenges">Tanlovlarni ko‘rish&nbsp; →</button></div>
+              </div>
+              <div class="home-stats">
+                <div class="stat-card"><div class="stat-top"><span>Tanlovlar</span><span class="stat-symbol">✦</span></div><div class="stat-number">4</div></div>
+                <div class="stat-card"><div class="stat-top"><span>Ijod va bilim</span><span class="stat-symbol">⌁</span></div><div class="stat-number">∞</div></div>
+                <div class="stat-card"><div class="stat-top"><span>Imkoniyat</span><span class="stat-symbol">★</span></div><div class="stat-number">Sizda</div></div>
+              </div>
+              <div class="section-head"><h3>Asosiy tanlovlar</h3><button class="text-link" data-view="challenges">Barchasini ko‘rish →</button></div>
+              <div class="challenge-grid">
+                <article class="challenge-card" style="--glow:rgba(109,40,217,.22)"><div class="challenge-cover cover-story"><span class="cover-symbol">📖</span></div><div class="challenge-body"><span class="challenge-tag">✍️ IJOD</span><h4>Hikoyalar tanlovi</h4><p>Fikrlaringiz va tasavvuringizni hikoya orqali ifoda eting.</p><div class="challenge-footer"><span class="challenge-meta">Matnli ijod</span><button class="card-open" data-view="challenges">Ko‘rish →</button></div><span class="countdown-label" data-countdown="story">Yuklanmoqda…</span></div></article>
+                <article class="challenge-card" id="zakovatHomeCard" style="--glow:rgba(37,99,235,.22)"><div class="challenge-cover cover-quiz"><span class="cover-symbol">🧠</span></div><div class="challenge-body"><span class="challenge-tag">🧠 BILIM</span><h4>Zakovat</h4><p>Mantiq, bilim va jamoaviy fikrlash bellashuvi.</p><div class="challenge-footer"><span class="challenge-meta">Jamoaviy o‘yin</span><button class="card-open" data-view="challenges">Ko‘rish →</button></div><span class="countdown-label" data-countdown="zakovat">Yuklanmoqda…</span></div></article>
+                <article class="challenge-card" style="--glow:rgba(37,99,235,.2)"><div class="challenge-cover cover-photo"><span class="cover-symbol">📷</span></div><div class="challenge-body"><span class="challenge-tag">📷 FOTO</span><h4>Fototanlov</h4><p>Eng qiziqarli lahza va ko‘rinishlarni suratga oling.</p><div class="challenge-footer"><span class="challenge-meta">Foto yuklash</span><button class="card-open" data-view="challenges">Ko‘rish →</button></div><span class="countdown-label" data-countdown="photo">Yuklanmoqda…</span></div></article>
+                <article class="challenge-card" style="--glow:rgba(220,38,38,.2)"><div class="challenge-cover cover-quiz"><span class="cover-symbol">🎬</span></div><div class="challenge-body"><span class="challenge-tag">🎥 VIDEO</span><h4>Video tanlov</h4><p>Maktabingiz, sinfingiz yoki sevimli kitobingiz haqida qisqa video tayyorlang.</p><div class="challenge-footer"><span class="challenge-meta">1–20 dekabr · 1–3 daqiqa</span><button class="card-open" data-view="challenges">Ko‘rish →</button></div><span class="countdown-label" data-countdown="video">Yuklanmoqda…</span></div></article>
+              </div>
+            </section>
+            <section class="home-view" id="view-challenges"><div class="section-head"><h3>Tanlovlar</h3></div><div class="challenge-grid">
+              <article class="challenge-card"><div class="challenge-cover cover-story"><span class="cover-symbol">📖</span></div><div class="challenge-body"><span class="challenge-tag">✍️ IJOD</span><h4>Hikoyalar tanlovi</h4><p>Yangi yil ruhidagi komediya yoki sirli, qo'rqinchli hikoya yozing. O'z g'oyangiz va yozuv mahoratingizni ko'rsating.</p><div class="challenge-footer"><span class="challenge-meta">1–20 dekabr · 250–2000 so'z</span><button class="card-open" data-contest-details="story">Ochish</button></div></div></article>
+              <article class="challenge-card" id="zakovatChallengeCard"><div class="challenge-cover cover-quiz"><span class="cover-symbol">🧠</span></div><div class="challenge-body"><span class="challenge-tag">🧠 BILIM</span><h4>Zakovat Challenge</h4><p>Jamoa bilan 4 o'yinda qatnashing, mantiq va umumiy bilim savollariga javob bering.</p><div class="challenge-footer"><span class="challenge-meta">28 noyabr – 19 dekabr · 09:00</span><button class="card-open" data-contest-details="zakovat">Ochish</button></div></div></article>
+              <article class="challenge-card"><div class="challenge-cover cover-photo"><span class="cover-symbol">📷</span></div><div class="challenge-body"><span class="challenge-tag">📷 FOTO</span><h4>Fototanlov</h4><p>Yangi yil kayfiyati va kundalik hayotdagi go'zal lahzalarni suratga oling.</p><div class="challenge-footer"><span class="challenge-meta">1–15 dekabr · 10 tagacha foto</span><button class="card-open" data-contest-details="photo">Ochish</button></div></div></article>
+              <article class="challenge-card"><div class="challenge-cover cover-quiz"><span class="cover-symbol">🎬</span></div><div class="challenge-body"><span class="challenge-tag">🎥 VIDEO</span><h4>Video tanlov</h4><p>Maktabingiz, sinfingiz yoki sevimli kitobingiz haqida qisqa video tayyorlang.</p><div class="challenge-footer"><span class="challenge-meta">1–20 dekabr · 1–3 daqiqa</span><button class="card-open" data-contest-details="video">Ochish</button></div></div></article>
+            </div></section>
+            <section class="home-view" id="view-projects"><div class="section-head"><div><h3>Ijodiy ishlar galereyasi</h3><p style="color:var(--muted);margin:6px 0 0">Tanlov ishtirokchilari topshirgan ishlar — hamma uchun ochiq.</p></div><button class="user-action" id="refreshProjects">↻ Yangilash</button></div><div class="review-tabs" id="projectTabs"><button class="review-tab active" data-project-tab="story">📖 Hikoyalar</button><button class="review-tab" data-project-tab="photo">📷 Fotolar</button><button class="review-tab" data-project-tab="video">🎬 Videolar</button></div><div id="projectsGallery"><div class="review-empty">Loyihalar yuklanmoqda…</div></div></section>
+            <section class="home-view" id="view-profile"><div class="section-head"><h3>Profil</h3></div><div class="empty-panel" id="profilePanel">Profil ma’lumotlari yuklanmoqda…</div><div id="zakovatAdminProfile" style="display:none;margin-top:20px"></div></section>
+
+            <section class="home-view" id="view-users">
+              <div class="section-head"><h3>Foydalanuvchilar boshqaruvi</h3></div>
+              <div class="user-management">
+                <div class="user-tabs"><button class="user-tab" data-user-tab="requests">Tasdiqlash</button><button class="user-tab active" data-user-tab="all">Barcha foydalanuvchilar</button><button class="user-tab" data-user-tab="admins">Adminlar</button></div>
+                <div class="user-toolbar"><input class="user-search" id="usersSearch" placeholder="Ism yoki username bo‘yicha qidirish..."><button class="user-action" id="refreshUsers">↻ Yangilash</button></div>
+                <div id="adminAddPanel" class="admin-add-panel" style="display:none"><h4>✦ Admin tayinlash — Super Admin uchun</h4><p>Tasdiqlangan o‘quvchi yoki o‘qituvchini Admin roliga ko‘tarish.</p><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><select id="adminCandidate" class="user-search" style="max-width:420px"><option value="">Admin tayinlash uchun foydalanuvchini tanlang</option></select><button class="user-action warn" id="assignAdminButton">Admin tayinlash</button></div></div>
+                <div id="usersList" class="user-list"><div class="empty-panel">Foydalanuvchilar yuklanmoqda…</div></div>
+              </div>
+            </section>
+            <section class="home-view" id="view-notifications"><div class="section-head"><h3>Bildirishnomalar</h3></div><div id="notificationsPanel" class="empty-panel">Bildirishnomalar yuklanmoqda…</div></section>
+          </main>
+        </div>
+        <div id="contestModal" class="contest-modal" aria-hidden="true"><div class="contest-modal-panel" role="dialog" aria-modal="true" aria-labelledby="contestModalTitle"><button type="button" class="contest-close" id="contestModalClose" aria-label="Yopish">×</button><div id="contestModalContent"></div></div></div>
+        <div class="toast-home" id="homeToast"></div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onload="console.log('Supabase SDK loaded')" onerror="document.getElementById('message').textContent='Supabase kutubxonasi yuklanmadi (CDN). Internet/VPN yoki tarmoqni tekshiring.';document.getElementById('message').className='status show err'"></script>
+<script>
+/* Supabase frontend configuration. Publishable key is intended for client-side use.
+   Protect data with RLS policies; never put service-role/secret keys here. */
+const SUPABASE_URL = "https://gykexvophqfzvodfvdjx.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_NCd0WSzhx2v3cPu0VUIK-g_qk1uI_9o";
+const supabaseClient = window.supabase?.createClient ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY) : null;
+
+// Username login is mapped to a synthetic email. This must match the project's existing auth convention.
+const USERNAME_EMAIL_DOMAIN = "login.elegantchallenge.invalid";
+const usernameToEmail = username => `${username.trim().toLowerCase()}@${USERNAME_EMAIL_DOMAIN}`;
+
+const registerForm=document.getElementById('registerForm');
+const loginForm=document.getElementById('loginForm');
+const registerTab=document.getElementById('registerTab');
+const loginTab=document.getElementById('loginTab');
+const message=document.getElementById('message');
+const classField=document.getElementById('classField');
+const accountType=document.getElementById('accountType');
+const dashboard=document.getElementById('dashboard');
+const authForms=[registerForm,loginForm];
+
+function showMessage(text,type='ok'){message.textContent=text;message.className='status show '+type}
+function clearMessage(){message.className='status';message.textContent=''}
+function setMode(mode){
+  clearMessage();
+  const isRegister=mode==='register';
+  registerForm.classList.toggle('hidden',!isRegister);
+  loginForm.classList.toggle('hidden',isRegister);
+  registerTab.classList.toggle('active',isRegister);
+  loginTab.classList.toggle('active',!isRegister);
+}
+// Visible diagnostics: confirm the click and form submission are reaching JavaScript.
+const registerButton=document.getElementById('registerButton');
+registerButton.addEventListener('click',()=>{
+  showMessage('Tugma bosildi. Formadagi ma’lumotlar tekshirilmoqda…','ok');
+  console.log('[Elegant Challenge] Register button click received');
+});
+window.addEventListener('error',ev=>{
+  showMessage('JavaScript xatosi: '+(ev.message||'noma’lum xato'),'err');
+  console.error('[Elegant Challenge] JS error',ev.error||ev.message);
+});
+window.addEventListener('unhandledrejection',ev=>{
+  showMessage('Kutilmagan xato: '+(ev.reason?.message||ev.reason||'noma’lum'),'err');
+  console.error('[Elegant Challenge] Promise error',ev.reason);
+});
+registerTab.addEventListener('click',()=>setMode('register'));
+loginTab.addEventListener('click',()=>setMode('login'));
+accountType.addEventListener('change',()=>classField.classList.toggle('hidden',accountType.value!=='student'));
+
+function showDashboard(user,profile){
+  authForms.forEach(f=>f.classList.add('hidden'));
+  document.querySelector('.switcher').classList.add('hidden');
+  document.querySelector('.brand-side').classList.add('hidden');
+  document.querySelector('.page').classList.add('home-active');
+  document.querySelector('.auth-wrap').style.display='block';
+  document.querySelector('.page').style.display='block';
+  dashboard.style.display='block';
+  const first=user?.user_metadata?.first_name || profile?.first_name || profile?.username || 'Foydalanuvchi';
+  const last=user?.user_metadata?.last_name || profile?.last_name || '';
+  const fullName=(first+' '+last).trim();
+  const role=profile?.role || profile?.account_type || user?.user_metadata?.account_type || 'foydalanuvchi';window.ecCurrentRole=role;window.ecCurrentUserId=user?.id||null;
+  const className=profile?.class_name || user?.user_metadata?.class_name || '—';
+  document.getElementById('homeUserName').textContent=fullName;
+  document.getElementById('homeUserRole').textContent=(role==='student'?'O‘quvchi':role==='teacher'?'O‘qituvchi':role);
+  document.getElementById('homeAvatar').textContent=(first[0]||'E').toUpperCase();
+  document.getElementById('greetingTitle').textContent=`Xush kelibsiz, ${first}!`;
+  document.getElementById('profilePanel').innerHTML=`<div style="display:flex;gap:16px;align-items:center;margin-bottom:18px"><div class="avatar" style="width:56px;height:56px;font-size:22px">${(first[0]||'E').toUpperCase()}</div><div><h3 style="margin:0 0 4px;color:#F6F4FF">${fullName}</h3><span style="color:#A99DE0">${role==='student'?'O‘quvchi':role==='teacher'?'O‘qituvchi':role}</span></div></div><p><strong>Username:</strong> ${profile?.username || user?.user_metadata?.username || '—'}</p><p><strong>Hisob turi:</strong> ${role}</p><p><strong>Sinf:</strong> ${className}</p><p><strong>Akkaunt holati:</strong> ${profile?.status || 'Tasdiqlangan'}</p><div id="profileContestArea" style="margin-top:24px"></div><section id="zakovatBoardSection" style="margin-top:28px;padding:20px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.025)"><div class="section-head"><div><h3>🏆 Zakovat doskasi va boshqaruvi</h3><p style="color:var(--muted);margin:5px 0">4 ta Game · har birida 2 ta Round · umumiy reyting</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="user-action" id="zakovatBoardRefresh">↻ Yangilash</button><button class="primary" id="zakovatFinalizeOpen" disabled>🏁 Tanlovni tugatish</button></div></div><div id="zakovatBoard"><div class="empty-panel">Zakovat doskasi yuklanmoqda…</div></div>${['admin','super_admin'].includes(String(role).toLowerCase())?'<div id="zakovatBoardAdmin" style="display:block;margin-top:18px"></div>':''}</section>${['admin','super_admin'].includes(String(role).toLowerCase())?'<div id="adminReviewPanel" style="margin-top:28px"></div><div id="adminLeaderboardPanel" style="margin-top:34px"></div>':''}`;
+  loadContestParticipations(user);
+  const isAdminForZakovat=['admin','super_admin'].includes(String(role).toLowerCase());
+  if(isAdminForZakovat){initAdminReviewPanel();initAdminLeaderboardPanel();}loadAdminNotifications();
+  const canZakovat=['student','teacher','admin','super_admin'].includes(String(role).toLowerCase());
+  document.getElementById('zakovatHomeCard').style.display=canZakovat?'':'none';
+  document.getElementById('zakovatChallengeCard').style.display=canZakovat?'':'none';loadZakovatBoard();if(isAdminForZakovat)initZakovatBoardAdmin();insertCountdowns();syncContestDeadlinesFromDb();supabaseClient?.rpc('cleanup_expired_contest_participations').then(({error})=>{if(error)console.warn('participation cleanup',error.message);});
+  document.querySelectorAll('[data-view]').forEach(btn=>btn.addEventListener('click',()=>switchHomeView(btn.dataset.view)));
+  document.querySelectorAll('.nav-item[data-view]').forEach(btn=>btn.addEventListener('click',()=>switchHomeView(btn.dataset.view)));
+  initProjectsGallery();
+  document.getElementById('homeLogout').addEventListener('click',logoutFromHome);document.getElementById('zakovatBoardRefresh')?.addEventListener('click',loadZakovatBoard);
+  const isAdmin=['admin','super_admin'].includes(String(role).toLowerCase());
+  const isSuperAdmin=String(role).toLowerCase()==='super_admin';
+  document.getElementById('usersNav').style.display=isAdmin?'':'none';
+  document.getElementById('adminAddPanel').style.display=isSuperAdmin?'':'none';
+  if(isAdmin) initUserManagement(isSuperAdmin);
+  switchHomeView('home');
+}
+
+let userManagementRows=[];let activeUserTab='all';let currentIsSuperAdmin=false;
+function safeText(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+async function initUserManagement(superAdmin){
+  currentIsSuperAdmin=superAdmin;
+  document.querySelectorAll('[data-user-tab]').forEach(btn=>btn.onclick=()=>{activeUserTab=btn.dataset.userTab;document.querySelectorAll('[data-user-tab]').forEach(b=>b.classList.toggle('active',b===btn));renderUsersList();});
+  document.getElementById('usersSearch').oninput=renderUsersList;
+  document.getElementById('refreshUsers').onclick=fetchUsers;
+  document.getElementById('assignAdminButton').onclick=async()=>{
+    const candidate=document.getElementById('adminCandidate').value;
+    if(!currentIsSuperAdmin){showToast('Admin tayinlash faqat Super Admin uchun.');return;}
+    if(!candidate){showToast('Avval foydalanuvchini tanlang.');return;}
+    const chosen=userManagementRows.find(u=>u.id===candidate);
+    if(!chosen||String(chosen.status).toLowerCase()!=='approved'||['admin','super_admin'].includes(String(chosen.role).toLowerCase())){showToast('Tanlangan foydalanuvchi Admin tayinlash talablariga mos emas.');return;}
+    if(!confirm(`${chosen.username||'Foydalanuvchi'} Admin qilinsinmi?`))return;
+    await userRpcAction('set_admin_role',{target:candidate,make_admin:true},'Admin roli tayinlandi.');
+  };
+  await fetchUsers();
+}
+async function fetchUsers(){
+  const target=document.getElementById('usersList');target.innerHTML='<div class="empty-panel">Foydalanuvchilar yuklanmoqda…</div>';
+  if(!supabaseClient){target.innerHTML='<div class="empty-panel">Supabase ulanmagan.</div>';return;}
+  const {data,error}=await supabaseClient.from('profiles').select('id,username,first_name,last_name,account_type,class_name,role,status,created_at').order('created_at',{ascending:false});
+  if(error){target.innerHTML='<div class="empty-panel">Foydalanuvchilarni yuklab bo‘lmadi: '+safeText(error.message)+'<br><small>RLS policy yoki jadval ruxsatlarini tekshirish kerak.</small></div>';userManagementRows=[];return;}
+  userManagementRows=data||[];
+  const candidate=document.getElementById('adminCandidate');if(candidate){const eligible=userManagementRows.filter(u=>!['admin','super_admin'].includes(String(u.role).toLowerCase())&&String(u.status).toLowerCase()==='approved');candidate.innerHTML='<option value="">Admin tayinlash uchun foydalanuvchini tanlang</option>'+eligible.map(u=>`<option value="${safeText(u.id)}">${safeText((u.first_name+' '+u.last_name).trim()||u.username)} (@${safeText(u.username)})</option>`).join('');}
+  renderUsersList();
+}
+function renderUsersList(){
+  const target=document.getElementById('usersList');if(!target)return;
+  const q=(document.getElementById('usersSearch')?.value||'').trim().toLowerCase();
+  let rows=userManagementRows.filter(u=>`${u.username||''} ${u.first_name||''} ${u.last_name||''} ${u.class_name||''}`.toLowerCase().includes(q));
+  if(activeUserTab==='requests')rows=rows.filter(u=>String(u.status).toLowerCase()==='pending');
+  if(activeUserTab==='admins')rows=rows.filter(u=>['admin','super_admin'].includes(String(u.role).toLowerCase()));
+  if(!rows.length){target.innerHTML='<div class="empty-panel">Bu bo‘limda foydalanuvchilar topilmadi.</div>';return;}
+  target.innerHTML=rows.map(u=>{const nm=(u.first_name+' '+u.last_name).trim()||u.username||'Foydalanuvchi';const status=String(u.status||'unknown');const role=String(u.role||u.account_type||'user');let actions='';
+    if(activeUserTab==='requests'&&status.toLowerCase()==='pending')actions=`<button class="user-action" data-approve="${safeText(u.id)}">Tasdiqlash</button><button class="user-action danger" data-reject="${safeText(u.id)}">Rad etish</button>`;
+    if(activeUserTab==='admins'&&currentIsSuperAdmin&&role==='admin')actions+=`<button class="user-action danger" data-demote="${safeText(u.id)}">Adminlikni olish</button>`;
+    const targetRole=String(u.role||'').toLowerCase();
+    const canDeleteTarget=u.id!==window.ecCurrentUserId&&targetRole!=='super_admin'&&(currentIsSuperAdmin||targetRole==='student'||targetRole==='teacher');
+    if(canDeleteTarget)actions+=`<button class="user-action danger" data-delete-user="${safeText(u.id)}" data-delete-username="${safeText(u.username||'')}">🗑 O‘chirish</button>`;
+    return `<div class="user-row"><div class="user-row-main"><div class="avatar">${safeText((nm[0]||'U').toUpperCase())}</div><div class="user-row-info"><strong>${safeText(nm)}</strong><small>@${safeText(u.username||'—')} · ${safeText(u.account_type==='teacher'?'O‘qituvchi':(u.class_name?u.class_name+'-sinf':'O‘quvchi'))}</small></div></div><span class="user-status">${safeText(role)} · ${safeText(status)}</span><div class="user-actions">${actions}</div></div>`;
+  }).join('');
+  target.querySelectorAll('[data-approve]').forEach(b=>b.onclick=()=>userRpcAction('set_account_status',{target:b.dataset.approve,new_status:'approved'},'Foydalanuvchi tasdiqlandi.'));
+  target.querySelectorAll('[data-reject]').forEach(b=>b.onclick=()=>{if(confirm('Ushbu ro‘yxatdan o‘tish so‘rovi rad etilsinmi?'))userRpcAction('set_account_status',{target:b.dataset.reject,new_status:'rejected'},'So‘rov rad etildi.');});
+  target.querySelectorAll('[data-demote]').forEach(b=>b.onclick=()=>{if(!currentIsSuperAdmin)return;if(confirm('Admin roli olib tashlansinmi?'))userRpcAction('set_admin_role',{target:b.dataset.demote,make_admin:false},'Admin roli olib tashlandi.');});
+  target.querySelectorAll('[data-delete-user]').forEach(b=>b.onclick=async()=>{
+    const username=b.dataset.deleteUsername||'';
+    if(!confirm(`⚠️ @${username} akkauntini butunlay o‘chirish?\n\nBu amal qaytarilmaydi. Foydalanuvchining profili va unga bog‘liq ma’lumotlar ham o‘chishi mumkin.`))return;
+    const typed=prompt(`Tasdiqlash uchun username'ni aynan yozing: ${username}`);
+    if(typed!==username){showToast('Tasdiqlash bekor qilindi.');return;}
+    await userRpcAction('delete_user_account',{target:b.dataset.deleteUser},`@${username} akkaunti o‘chirildi.`);
+  });
+}
+async function userRpcAction(fn,args,success){try{const {data,error}=await supabaseClient.rpc(fn,args);if(error)throw error;showToast(success);await fetchUsers();}catch(err){showToast('Amal bajarilmadi: '+(err.message||'Backend ruxsatini tekshiring.'));console.error('User management RPC error',fn,err);}}
+
+
+const contestRuleContent={
+ story:`<h2 id="contestModalTitle">📖 Hikoyalar tanlovi — to'liq nizom</h2><div class="contest-dates"><span>📅 Qabul: 1–20 dekabr</span><span>⚖️ Hakamlar: 21–24 dekabr</span><span>🏆 Taqdirlash: taxminan 25 dekabr</span></div>
+<h3>1. Tanlov haqida</h3><p>Yangi yil ruhidagi qo'rqinchli (horror) yoki kulgili (komediya) hikoya yozing. Hikoya yangi yil bilan bog'liq bo'lishi kerak: qor, archa, sovg'a, yangi yil kechasi, bayram stoli, Qor bobo yoki Qorqiz, soat zarbi, orzu va boshqalar.</p><p><b>Janrlar:</b> Komediya — kulgili vaziyatlar, kutilmagan voqealar va hazil. Horror — sirli, hayajonli, qo'rquv uyg'otuvchi voqealar.</p>
+<h3>2. Kim qatnashadi?</h3><ul><li>6–11-sinf o'quvchilari; barchasi bitta umumiy guruhda baholanadi.</li><li>Har bir o'quvchi faqat 1 ta hikoya yuboradi.</li><li>Ishtirok yakka tartibda.</li></ul><h3>3. Hikoyaga talablar</h3><ul><li>250–2000 so'z, o'zbek tilida, sarlavhali.</li><li>To'liq tuzilma: boshlanish, voqealar rivoji, kulminatsiya va yakun.</li><li>G'oya ham, matn ham muallifning o'zi yozgan bo'lishi shart.</li><li>Word yoki Google Docs, oddiy shrift, 14 o'lcham, 1.5 interval. Qo'lda yozilgan hikoyaning aniq tasviri ham qabul qilinadi.</li></ul><h3>4. SI va ko'chirish</h3><ul><li>SI hikoyani yozib bermasligi kerak; ona tili o'qituvchilari tekshirishi mumkin, shubhada og'zaki savollar beriladi.</li><li>Internet, kitob yoki boshqa o'quvchidan ko'chirilgan hikoya diskvalifikatsiya qilinadi.</li><li>Disney, Marvel, Garri Potter kabi mashhur asar/filmlardan qahramonlar ishlatilmasin; qahramonlarni o'zingiz yarating.</li></ul><h3>5. Mazmun va odob</h3><ul><li>6-sinf o'quvchilari ham qatnashishi sabab horror hikoyalarda vahshiylik, qon-qasos, o'lim tafsilotlari yoki dahshatli zo'ravonlik bo'lmasin.</li><li>Haqiqiy o'qituvchi, o'quvchi, maktab xodimi yoki tanishlar ismi/taxallusi va ularni masxara qiluvchi mazmun ishlatilmasin.</li><li>Haqorat, irq/millat/din/tashqi ko'rinish/nuqsonni masxara qilish, giyohvandlik, spirtli ichimlik yoki zo'ravonlik targ'iboti taqiqlanadi.</li><li>Qoidaga zid ishlar chiqariladi, sababi muallifga tushuntiriladi.</li></ul><h3>6. Yuborish va tahrirlash</h3><p>Sayt shaxsiy kabinetiga ism-familiya, sinf, hikoya sarlavhasi, janr va matn kiritiladi. Muddat tugaguncha bir marta tahrirlash mumkin; muddatdan keyin matn o'zgarmaydi.</p><h3>7. Baholash</h3><p>Avval 4 nafar ona tili o'qituvchisi hakamlar hay'ati anonim baholaydi. Barcha sinflar bir xil mezon bilan baholanadi, yoshga nisbatan original g'oya va tuzilish ham hisobga olinadi.</p><table class="score-table"><tr><th>Mezon</th><th>Ball</th></tr><tr><td>G'oya va originallik</td><td>25</td></tr><tr><td>Syujet va voqealar rivoji</td><td>25</td></tr><tr><td>Til, savodxonlik, lug'at va uslub</td><td>20</td></tr><tr><td>Janrga mosligi</td><td>15</td></tr><tr><td>Yangi yil ruhi</td><td>10</td></tr><tr><td>Sarlavha va umumiy taassurot</td><td>5</td></tr><tr><td><b>Jami</b></td><td><b>100</b></td></tr></table><h3>8. Sovrinlar va aloqa</h3><ul><li>1-o'rin: 100 000 so'm + sertifikat</li><li>2-o'rin: sertifikat</li><li>3-o'rin: sertifikat</li></ul><p>Eng yaxshi hikoyalar kichik to'plam qilib chop etilishi mumkin. Savollar: Hamrayeva Shahzoda.</p>`,
+ photo:`<h2 id="contestModalTitle">📷 Fototanlov — to'liq nizom</h2><div class="contest-dates"><span>📅 Qabul: 1–15 dekabr</span><span>⚖️ Hakamlar: 16–24 dekabr</span><span>🗳️ Ovoz: 16–24 dekabr</span><span>🏆 Taqdirlash: taxminan 25 dekabr</span></div><h3>1. Tanlov haqida</h3><p>Yangi yil ruhidagi suratlar orqali atrofdagi dunyoni o'z ko'zingiz bilan ko'rsating. Telefon kamerasi yetarli.</p><p><b>Mavzular:</b> “Qishlog'imizda qish”, “Kichik hayotiy lahza”, “Maktab hayoti”.</p><h3>2. Kim qatnashadi?</h3><ul><li>6–11-sinf o'quvchilari, barchasi bitta guruhda baholanadi.</li><li>Har bir o'quvchi maksimum 10 ta surat yuboradi; yakka tartib.</li></ul><h3>3. Surat talablari</h3><ul><li>Surat o'zingiz tomonidan, tanlov e'lon qilinganidan keyin olingan bo'lishi shart.</li><li>Telefon yoki fotoapparat; qirqish, yorqinlik va kontrast sozlash mumkin.</li><li>Kuchli filtr, kollaj, SI yaratgan yoki internetdan olingan surat taqiqlanadi.</li><li>JPG/PNG, uzun tomoni kamida 1280 px, 10 MB gacha.</li><li>Ramka, watermark, ism yoki yozuv qo'shmang.</li><li>Har suratga 1–5 gap izoh (uzbek/rus/ingliz) yoziladi.</li><li>Hakamlar asl fayl so'rashi mumkin; taqdim qilinmasa ish chiqariladi.</li></ul><h3>4. Odob va xavfsizlik</h3><ul><li>Yuz tushgan odamning roziligi kerak.</li><li>Yo'l, balandlik yoki suv bo'yidagi xavfli joylarda suratga tushmang.</li><li>Haqoratli/noo'rin yoki sha'niga tegadigan suratlar, o'zlashtirish taqiqlanadi.</li></ul><h3>5. Yuborish</h3><p>Shaxsiy kabinet orqali ism-familiya, sinf, surat va izoh yuboriladi. Muddat tugaguncha ishni bir marta almashtirish mumkin.</p><h3>6. Baholash</h3><p>3 nafar o'qituvchi anonim hakamlik qiladi. Keyin ommaviy ovoz: har foydalanuvchi bir marta, o'z ishiga ovoz bera olmaydi. Ovozlarni sun'iy ko'paytirish diskvalifikatsiya.</p><p>Yakun: hakamlar balli 60% + ommaviy ovoz 40%. Eng ko'p ovozga 100 ball, boshqalarga proporsional ball; tenglikda hakamlar balli yuqori bo'lgan ish yutadi.</p><table class="score-table"><tr><th>Mezon</th><th>Ball</th></tr><tr><td>Mavzuga mosligi</td><td>25</td></tr><tr><td>Kompozitsiya</td><td>25</td></tr><tr><td>Original g'oya</td><td>25</td></tr><tr><td>Texnik sifat (yorug'lik, fokus)</td><td>15</td></tr><tr><td>Izoh</td><td>10</td></tr><tr><td><b>Jami</b></td><td><b>100</b></td></tr></table><h3>7. Sovrinlar va aloqa</h3><ul><li>1-o'rin: 100 000 so'm + sertifikat</li><li>2-o'rin: sertifikat</li><li>3-o'rin: sertifikat</li></ul><p>Finalchilar sertifikat oladi, ishlari maktab foto-ko'rgazmasida namoyish qilinadi. Savollar: sinf rahbaringiz.</p>`,
+ video:`<h2 id="contestModalTitle">🎬 Video tanlov — to'liq nizom</h2><div class="contest-dates"><span>📅 Qabul: 1–20 dekabr</span><span>⚖️ Hakamlar: 20–24 dekabr</span><span>🏆 Taqdirlash: taxminan 25 dekabr</span></div><h3>1. Tanlov haqida va mavzular</h3><p>Maktab, sinf yoki sevimli kitob haqida qisqa video. Telefonda suratga olish yoki SI vositalarida yaratish mumkin, lekin g'oya va hikoya o'zingizniki bo'lishi shart.</p><ul><li><b>Mening maktabim:</b> maktab hayoti, urf-odatlar, o'qituvchilar yoki qulay joylar.</li><li><b>Mening sinfim:</b> sinfdoshlar, esda qolarli voqealar, an'analar.</li><li><b>Kitob treyleri:</b> o'qilgan kitobga qiziqarli video taqdimot.</li></ul><h3>2. Kim qatnashadi?</h3><p>6–11-sinf o'quvchilari; yakka yoki 2 kishilik juftlik. Har ishtirokchi/juftlik 1 ta video yuboradi.</p><h3>3. Video talablari</h3><ul><li>60 soniyadan 3 daqiqagacha.</li><li>Faqat rus tilida; subtitr bo'lsa afzallik.</li><li>MP4, kamida 720p, gorizontal yoki vertikal.</li><li>Boshida sarlavha, oxirida muallif ismi, sinf va ishlatilgan dasturlar.</li><li>Kitob treylerida kitob nomi va muallifi boshida; kitob matnini ko'chirib o'qimang, qisqa iqtibos mumkin.</li><li>Faqat bepul va ochiq litsenziyali musiqa (masalan, YouTube Audio Library); mashhur qo'shiq, film/multfilm parchasi va mashhur qahramonlardan foydalanmang.</li></ul><h3>4. SI qoidalari</h3><p><b>Ruxsat:</b> g'oya/ssenariy matnini tahrirlash, rasm/animatsiya/video lavha, diktor ovozi/subtitr, montaj/dizayn vositalari.</p><p><b>Shart:</b> ishlatilgan SI vositalarini videoning oxirida va yuborish formasida ko'rsatish; asosiy ssenariy g'oyasi o'quvchining o'ziniki. Hakamlar tayyorlash jarayoni haqida 1–2 daqiqalik savol berishi mumkin.</p><p><b>Taqiqlanadi:</b> real odam yuz/ovozini SI bilan taqlid qilish (deepfake); SI lavhasini haqiqiy voqea sifatida ko'rsatish (SI lavha ekanini aniq belgilash); ishni o'zlashtirish.</p><h3>5. Odob va xavfsizlik</h3><ul><li>Videoga tushgan odamlar rozilik bergan bo'lishi kerak.</li><li>Uy manzili, telefon yoki boshqa shaxsiy ma'lumotlarni ko'rsatmang.</li><li>Haqorat, masxara, sha'niga tegish; xavfli joylarda suratga olish yoki darsga xalaqit qilish mumkin emas.</li><li>Qoidabuzarlik bo'lgan ish tanlovdan chiqariladi.</li></ul><h3>6. Baholash</h3><p>3 nafar rus tili o'qituvchisi hakamlar hay'ati.</p><table class="score-table"><tr><th>Mezon</th><th>Ball</th></tr><tr><td>G'oya va mazmun</td><td>30</td></tr><tr><td>Hikoya qilish (ssenariy, izchillik)</td><td>25</td></tr><tr><td>Tasvir va montaj sifati</td><td>20</td></tr><tr><td>Til va nutq madaniyati</td><td>15</td></tr><tr><td>Originallik va SI dan mas'uliyatli foydalanish</td><td>10</td></tr><tr><td><b>Jami</b></td><td><b>100</b></td></tr></table><h3>7. Sovrinlar va aloqa</h3><ul><li>1-o'rin: 100 000 so'm + sertifikat</li><li>2-o'rin: sertifikat</li><li>3-o'rin: sertifikat</li></ul><p>Finalchi videolar taqdim etilishi mumkin. Savollar: Sardorbek O'ktamovich yoki Ziyodbek Xolmirzayevich.</p>`,
+ zakovat:`<h2 id="contestModalTitle">🧠 Zakovat Challenge 2026 — to'liq qoidalar</h2><div class="contest-dates"><span>🗓️ 28-noyabr · 09:00</span><span>🗓️ 5-dekabr · 09:00</span><span>🗓️ 12-dekabr · 09:00</span><span>🗓️ 19-dekabr · 09:00</span></div><h3>1. Tanlov haqida</h3><p>4 o'yindan iborat intellektual musobaqa. Jamoalar turli yo'nalishdagi savollarga javob beradi; eng ko'p ball to'plagan jamoa g'olib. Barcha sinflar bitta umumiy reytingda.</p><h3>2. Kim qatnashadi va jamoa</h3><ul><li>6–11-sinf o'quvchilari.</li><li>Jamoani Zakovatga ro‘yxatdan o‘tgan sardor o‘zi yaratadi. Sardor bilan jami 6 nafar a’zo bo‘ladi; qolgan a’zolarning akkaunti bo‘lishi shart emas.</li><li>Admin jamoa nomlarini o‘zgartirishi mumkin; jamoalar tarkibi va nomlari doskada ko‘rinadi.</li></ul><h3>3. Ro'yxatdan o'tish</h3><p>Sardor ilk o'yindan oldin saytda jamoani ro'yxatdan o'tkazadi: jamoa nomi, sardor, o'yinchilar va zaxira. Ro'yxatdan o'tmagan jamoa qatnashmaydi. O'yinlar orasida tarkibni bir marta o'zgartirish mumkin, tashkilotchiga oldindan xabar beriladi.</p><h3>4. O'yin jadvali va joy</h3><table class="score-table"><tr><th>O'yin</th><th>Sana</th><th>Vaqt</th></tr><tr><td>1</td><td>28-noyabr (shanba)</td><td>09:00</td></tr><tr><td>2</td><td>5-dekabr (shanba)</td><td>09:00</td></tr><tr><td>3</td><td>12-dekabr (shanba)</td><td>09:00</td></tr><tr><td>4</td><td>19-dekabr (shanba)</td><td>09:00</td></tr></table><p>Joy: Matematiklar zali (ishtirokchilar soniga qarab o'zgarishi mumkin). Har o'yin taxminan 60–75 daqiqa.</p><h3>5. O'yin tartibi va savollar</h3><ul><li>Har o'yin 2 raund, har raund 12 savol; jami 24.</li><li>Moderator savolni bir marta o'qiydi, kerak bo'lsa ekranga chiqaradi. Muhokama 1 daqiqa.</li><li>10 soniya qolganida signal. Vaqt tugagach, javob qabul qilinadi.</li><li>Javobni sardor javob varag'iga yozadi; jamoa nomi va savol raqami bo'lishi shart.</li><li>Raunddan so'ng varaqlar yig'iladi, to'g'ri javoblar va natijalar e'lon qilinadi.</li><li>Savollar 6–11-sinf dasturi va umumiy bilimdan; yengil/o'rta/qiyin aralash. Savollar maxfiy. Oldindan oshkor bo'lsa jamoa chiqariladi.</li></ul><h3>6. Baholash va yakun</h3><ul><li>To'g'ri javob — 1 ball; bir o'yinda maksimal 24.</li><li>Imlo xatosi ma'noni o'zgartirmasa ball kamaymaydi; ma'no o'zgarsa noto'g'ri.</li><li>Bir savolga bitta javob. Ikki javob yozilsa hisoblanmaydi.</li><li>Yakuniy reyting 4 o'yin ballari yig'indisi. 1–3 o'rinda tenglik bo'lsa qo'shimcha savol.</li><li>Natijalar o'yindan keyin 24 soat ichida jonli jadvalda.</li></ul><h3>7. Umumiy qoidalar</h3><ul><li>Telefon, smart-soat, kitob, daftar o'yinda ishlatilmaydi; oldindan topshiriladi.</li><li>Faqat jamoa ichida pichirlab muhokama. Boshqa jamoa bilan gaplashish/ishora taqiqlanadi.</li><li>Tomoshabinlar jim, javob aytish yoki ko'rsatish mumkin emas.</li><li>10 daqiqa oldin kelish; kechikkan jamoa o'tkazilgan savollar ballini olmaydi.</li><li>Kamida 4 o'yinchi bilan o'ynash mumkin. Kelmagan jamoa 0 ball; uzrli sababni tashkilotchilar ko'rib chiqadi.</li><li>Hakam, boshlovchi va jamoalarga hurmat.</li></ul><h3>8. Hakamlar va e'tiroz</h3><p>2–3 hakam; qarori yakuniy. Sardor raund oxirida yozma e'tiroz beradi, hakamlar shu o'yin tugaguncha javob beradi. Savolda xato bo'lsa, savol bekor qilinadi va barcha jamoaga 1 ball beriladi.</p><h3>9. Sovrin va aloqa</h3><p>G'olib jamoa sertifikat, 300 000 so'm va geografiya o'qituvchisidan qo'shimcha sovg'a oladi. Savollar: Sardor Turdiyev yoki sinf rahbaringiz.</p>`
+};
+function openContestDetails(key){const modal=document.getElementById('contestModal');const content=document.getElementById('contestModalContent');if(!modal||!contestRuleContent[key])return;content.innerHTML=contestRuleContent[key]+`<div class="contest-participate-wrap"><button type="button" class="primary contest-participate-btn" data-contest-join="${key}">${key==='zakovat'?'Zakovatga qatnashish':'Qatnashish'}</button><p class="countdown-label">${safeText(countdownText(key))}</p></div>`;const modalJoin=content.querySelector('[data-contest-join]');if(new Date(EC_CONTEST_DATES[key].end).getTime()<Date.now()){modalJoin.disabled=true;modalJoin.textContent='Tanlov yakunlangan';}modalJoin?.addEventListener('click',async()=>{await joinContest(key);});modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+const EC_CONTEST_DATES={story:{start:'2026-12-01T00:00:00+05:00',end:'2026-12-20T23:59:59+05:00'},photo:{start:'2026-12-01T00:00:00+05:00',end:'2026-12-15T23:59:59+05:00'},video:{start:'2026-12-01T00:00:00+05:00',end:'2026-12-20T23:59:59+05:00'},zakovat:{start:'2026-11-28T09:00:00+05:00',end:'2026-12-19T10:15:00+05:00'}};
+function countdownText(key){const now=Date.now();if(key==='zakovat'){const games=window.ecZakovatDates||[{number:1,date:'2026-11-28T09:00:00+05:00'},{number:2,date:'2026-12-05T09:00:00+05:00'},{number:3,date:'2026-12-12T09:00:00+05:00'},{number:4,date:'2026-12-19T09:00:00+05:00'}];const next=games.find(g=>new Date(g.date).getTime()>now);if(!next)return 'Zakovat turniri yakunlangan';const days=Math.ceil((new Date(next.date).getTime()-now)/86400000);return `${next.number}-o‘yinga ${days} kun qoldi · ${new Date(next.date).toLocaleDateString('uz-UZ')}`;}const d=EC_CONTEST_DATES[key];if(!d)return '';const end=new Date(d.end).getTime();if(now>end)return 'Tanlov yakunlangan · qatnashish yopiq';const start=new Date(d.start).getTime();if(now<start){const days=Math.ceil((start-now)/86400000);return `Tanlov boshlanishiga ${days} kun qoldi`;}const days=Math.ceil((end-now)/86400000);return days<=1?'Tanlov bugun tugaydi!':`Tanlov tugashiga ${days} kun qoldi`; }
+async function syncContestDeadlinesFromDb(){try{const {data,error}=await supabaseClient.from('contest_deadlines').select('contest_key,opens_at,closes_at');if(error)throw error;(data||[]).forEach(d=>{if(EC_CONTEST_DATES[d.contest_key])EC_CONTEST_DATES[d.contest_key]={start:d.opens_at,end:d.closes_at};});const {data:games}=await supabaseClient.from('zakovat_games').select('game_number,game_date,status').neq('status','completed').order('game_date');if(games?.length)window.ecZakovatDates=games.map(g=>({number:g.game_number,date:g.game_date}));updateContestCountdowns();applySubmissionDeadlineLocks();}catch(e){console.warn('deadline sync',e.message);}}
+function updateContestCountdowns(){document.querySelectorAll('[data-countdown]').forEach(el=>el.textContent=countdownText(el.dataset.countdown));}
+function insertCountdowns(){const cards=[...document.querySelectorAll('[data-contest-details]')];cards.forEach(btn=>{const key=btn.dataset.contestDetails;const card=btn.closest('.challenge-card');if(!card||card.querySelector('[data-countdown]'))return;const label=document.createElement('span');label.className='countdown-label';label.dataset.countdown=key;label.textContent=countdownText(key);btn.closest('.challenge-footer')?.after(label);});updateContestCountdowns();if(!window.ecCountdownInterval)window.ecCountdownInterval=setInterval(updateContestCountdowns,60000);}
+async function saveZakovatRoundScore(gameId,teamId,roundNumber,input){
+ const raw=input.value.trim();
+ if(raw===''){input.dataset.pending='true';return;}
+ const value=Number(raw);
+ if(!Number.isInteger(value)||value<0||value>12){showToast('Ball 0 dan 12 gacha butun son bo‘lishi kerak.');return;}
+ try{
+  input.dataset.saving='true';
+  const {error}=await supabaseClient.from('zakovat_scores').upsert({team_id:teamId,game_id:gameId,round_number:roundNumber,score:value,updated_at:new Date().toISOString()},{onConflict:'team_id,game_id,round_number'});
+  if(error)throw error;
+  input.dataset.saving='false';input.dataset.pending='false';
+  input.style.borderColor='#27c27a';
+  setTimeout(()=>{if(input.isConnected)input.style.borderColor='#C99A36';},900);
+  const totalCell=input.closest('tr')?.querySelector('[data-team-total]');
+  if(totalCell){const current=Number(totalCell.textContent)||0;const old=Number(input.dataset.oldScore)||0;totalCell.textContent=current-old+value;input.dataset.oldScore=String(value);}
+  await refreshZakovatFinalizeButtonState();
+ }catch(e){input.dataset.saving='false';showToast('Ball saqlanmadi: '+e.message);console.error('Zakovat score save',e);}
+}
+function zakovatScoreComplete(teams,games,scores){
+ const gameSlots=[1,2,3,4].map(n=>(games||[]).find(g=>Number(g.game_number)===n)||null);
+ if(gameSlots.some(g=>!g))return false;
+ return teams.every(t=>gameSlots.every(g=>[1,2].every(rn=>(scores||[]).some(sc=>sc.team_id===t.id&&sc.game_id===g.id&&Number(sc.round_number||1)===rn&&sc.score!==null&&sc.score!==undefined))))
+}
+async function refreshZakovatFinalizeButtonState(){
+ const btn=document.getElementById('zakovatFinalizeOpen');if(!btn)return;
+ try{const [{data:teams,error:tErr},{data:games,error:gErr},{data:scores,error:sErr}]=await Promise.all([supabaseClient.from('zakovat_teams').select('id'),supabaseClient.from('zakovat_games').select('id,game_number'),supabaseClient.from('zakovat_scores').select('team_id,game_id,round_number,score')]);if(tErr)throw tErr;if(gErr)throw gErr;if(sErr)throw sErr;btn.disabled=!zakovatScoreComplete(teams||[],games||[],scores||[]);btn.title=btn.disabled?'Barcha jamoalarning 8 ta katagiga ball kiriting':'';}catch(e){btn.disabled=true;console.warn('Finalize readiness refresh',e.message);}
+}
+async function openZakovatFinalizePreview(){
+ const role=String(window.ecCurrentRole||'').toLowerCase();if(!['admin','super_admin'].includes(role))return;
+ const [{data:teams,error:tErr},{data:games,error:gErr},{data:scores,error:sErr}]=await Promise.all([
+  supabaseClient.from('zakovat_teams').select('id,name,captain_user_id').order('name'),
+  supabaseClient.from('zakovat_games').select('id,game_number,game_date,status').order('game_number'),
+  supabaseClient.from('zakovat_scores').select('team_id,game_id,round_number,score')
+ ]);
+ if(tErr)throw tErr;if(gErr)throw gErr;if(sErr)throw sErr;
+ if(!teams?.length)throw new Error('Jamoalar ro‘yxati bo‘sh.');
+ if(!zakovatScoreComplete(teams,games,scores))throw new Error('Barcha jamoalarning 4 Game × 2 Round ballari to‘ldirilishi kerak.');
+ const gameSlots=[1,2,3,4].map(n=>(games||[]).find(g=>Number(g.game_number)===n));
+ const standings=teams.map(t=>({team:t,total:gameSlots.reduce((sum,g)=>sum+[1,2].reduce((x,rn)=>x+Number(scores.find(sc=>sc.team_id===t.id&&sc.game_id===g.id&&Number(sc.round_number||1)===rn)?.score||0),0),0)})).sort((a,b)=>b.total-a.total||a.team.name.localeCompare(b.team.name,'uz'));
+ const top=standings.slice(0,3);
+ const teamIds=top.map(x=>x.team.id);
+ const [{data:members,error:mErr},{data:guests,error:guestErr}]=await Promise.all([
+  supabaseClient.from('zakovat_team_members').select('team_id,user_id').in('team_id',teamIds),
+  supabaseClient.from('zakovat_team_guest_members').select('team_id,full_name').in('team_id',teamIds)
+ ]);
+ if(mErr)throw mErr;if(guestErr)throw guestErr;
+ const userIds=[...new Set((members||[]).map(m=>m.user_id).filter(Boolean))];let profiles=[];
+ if(userIds.length){const {data,error}=await supabaseClient.from('profiles').select('id,first_name,last_name,username,class_name').in('id',userIds);if(error)throw error;profiles=data||[];}
+ const pmap=new Map(profiles.map(p=>[p.id,p]));
+ const roster=top.map((entry,i)=>{
+  const t=entry.team;const rosterMembers=(members||[]).filter(m=>m.team_id===t.id).map(m=>{const p=pmap.get(m.user_id)||{};return {name:((p.first_name||'')+' '+(p.last_name||'')).trim()||p.username||'Ishtirokchi',className:p.class_name||'',captain:m.user_id===t.captain_user_id};});
+  const guestNames=(guests||[]).filter(g=>g.team_id===t.id).map(g=>({name:g.full_name,className:'',captain:false}));
+  const captain=rosterMembers.find(m=>m.captain)?.name||'—';
+  const allMembers=[...rosterMembers,...guestNames];const classes=[...new Set(allMembers.map(m=>m.className).filter(Boolean))];return {rank:i+1,teamName:t.name,captain,members:allMembers,membersText:allMembers.map(m=>m.name+(m.captain?' (Sardor)':'')).join(', ')||'—',classNames:classes,classText:classes.join(', ')||'—',total:entry.total};
+ });
+ let modal=document.getElementById('zakovatFinalizeModal');if(!modal){modal=document.createElement('div');modal.id='zakovatFinalizeModal';modal.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(5,8,18,.78);display:none;align-items:center;justify-content:center;padding:16px;';document.body.appendChild(modal);}
+ modal.innerHTML=`<div style="width:min(780px,100%);max-height:90vh;overflow:auto;border:1px solid #C99A36;border-radius:20px;padding:22px;background:var(--card,#101729);box-shadow:0 20px 70px #0008"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0;color:#D6AC48">🏆 Tanlov natijalari</h2><button class="user-action" data-finalize-exit>✕ Chiqish</button></div><p class="note">Natijalarni tekshiring. «Chiqish» orqali ballarni qayta tahrirlashingiz mumkin.</p><div style="overflow:auto"><table class="score-table"><thead><tr><th>O‘rin</th><th>Jamoa</th><th>Ball</th></tr></thead><tbody>${top.map((r,i)=>`<tr><td>${['🥇','🥈','🥉'][i]} ${i+1}</td><td>${safeText(r.team.name)}</td><td><b>${standings.find(x=>x.team.id===r.team.id).total}</b></td></tr>`).join('')}</tbody></table></div><div style="display:grid;gap:12px;margin:14px 0">${roster.map(r=>`<article style="border:1px solid var(--line);border-radius:13px;padding:13px"><h4 style="margin:0 0 8px">${['🥇','🥈','🥉'][r.rank-1]} ${r.rank}-o‘rin · ${safeText(r.teamName)} · ${r.total} ball</h4><p style="margin:5px 0"><b>Sardor:</b> ${safeText(r.captain)}</p><p style="margin:5px 0"><b>Sinf:</b> ${safeText(r.classNames.join(', ')||'—')}</p><p style="margin:5px 0"><b>Ishtirokchilar:</b> ${safeText(r.members.map(m=>m.name+(m.captain?' (Sardor)':'')).join(', ')||'—')}</p></article>`).join('')}</div><div style="display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap"><button class="user-action" data-finalize-exit>Chiqish</button><button class="primary" id="zakovatBroadcastResults">📢 Hammaga xabar berish</button></div></div>`;
+ modal.style.display='flex';modal.querySelectorAll('[data-finalize-exit]').forEach(b=>b.onclick=()=>modal.style.display='none');
+ modal.querySelector('#zakovatBroadcastResults').onclick=async function(){const btn=this;btn.disabled=true;btn.textContent='Yuborilmoqda…';try{const {error}=await supabaseClient.rpc('zakovat_broadcast_top3',{results_input:roster});if(error)throw error;showToast(roster.length+' ta o‘rin natijasi alohida xabar sifatida hammaga yuborildi.');modal.style.display='none';}catch(e){showToast('Xabar yuborilmadi: '+e.message);btn.disabled=false;btn.textContent='📢 Hammaga xabar berish';}};
+}
+async function loadZakovatBoard(){
+ const out=document.getElementById('zakovatBoard');if(!out)return;
+ out.innerHTML='Yuklanmoqda…';
+ try{
+  const [{data:teams,error:tErr},{data:games,error:gErr},{data:scores,error:sErr}]=await Promise.all([
+   supabaseClient.from('zakovat_teams').select('id,name,created_at').order('created_at'),
+   supabaseClient.from('zakovat_games').select('id,game_number,game_date,status').order('game_number'),
+   supabaseClient.from('zakovat_scores').select('team_id,game_id,round_number,score')
+  ]);
+  if(tErr)throw tErr;if(gErr)throw gErr;if(sErr)throw sErr;
+  if(!teams?.length){out.innerHTML='<div class="empty-panel">Hozircha jamoalar yo‘q. Zakovatga qatnashib, Profilingizdan jamoa yarating.</div>';return;}
+  const isAdmin=['admin','super_admin'].includes(String(window.ecCurrentRole||'').toLowerCase());
+  const scoreList=scores||[];
+  const finalizeBtn=document.getElementById('zakovatFinalizeOpen');if(finalizeBtn){finalizeBtn.style.display=isAdmin?'':'none';finalizeBtn.disabled=!zakovatScoreComplete(teams,games,scoreList);finalizeBtn.title=finalizeBtn.disabled?'Barcha jamoalarning 8 ta katagiga ball kiriting':'';finalizeBtn.onclick=async()=>{try{await openZakovatFinalizePreview();}catch(err){showToast(err.message);console.error('Zakovat final preview',err);}};}
+  const gameSlots=[1,2,3,4].map(n=>(games||[]).find(g=>Number(g.game_number)===n)||null);
+  const rows=teams.map(t=>{
+   const cells=gameSlots.flatMap(g=>[1,2].map(roundNo=>g?Number(scoreList.find(sc=>sc.team_id===t.id&&sc.game_id===g.id&&Number(sc.round_number||1)===roundNo)?.score||0):0));
+   return {...t,cells,total:cells.reduce((a,b)=>a+b,0)};
+  }).sort((a,b)=>b.total-a.total);
+  const gameHeaders=gameSlots.map((g,i)=>`<th colspan="2">Game ${i+1}</th>`).join('');
+  const roundHeaders=gameSlots.map(()=>'<th>Round 1</th><th>Round 2</th>').join('');
+  out.innerHTML=`<div class="zakovat-board-wrap"><table class="zakovat-board-table"><thead><tr><th rowspan="2" style="min-width:165px">Jamoa</th>${gameHeaders}<th rowspan="2">Overall<br>Score</th></tr><tr>${roundHeaders}</tr></thead><tbody>${rows.map((r,i)=>`<tr><td class="team-name-cell">${safeText(r.name)}</td>${gameSlots.map((game,gameIndex)=>[1,2].map(roundNo=>{const idx=gameIndex*2+(roundNo-1),val=r.cells[idx];return `<td>${isAdmin&&game?`<input class="score-input" type="number" min="0" max="12" step="1" value="${val===0?'':val}" placeholder="—" aria-label="${safeText(r.name)} Game ${gameIndex+1} Round ${roundNo} balli" data-round-score="${game.id}|${r.id}|${roundNo}" data-old-score="${val}">`:`<b>${val===0?'—':val}</b>`}</td>`;}).join('')).join('')}<td class="total-cell"><b data-team-total>${r.total}</b></td></tr>`).join('')}</tbody></table></div><p class="note" style="margin-top:10px">${isAdmin?'Ballni katakka yozing yoki avvalgi ballni o‘zgartiring. Katakdan chiqilganda avtomatik saqlanadi. Har round 0–12 ball.':'Ballar 4 ta game, har biridagi 2 round bo‘yicha jamlanadi.'}</p>`;
+  if(isAdmin){
+   out.querySelectorAll('[data-round-score]').forEach(input=>{
+    const [gid,tid,rn]=input.dataset.roundScore.split('|');
+    input.addEventListener('change',()=>saveZakovatRoundScore(gid,tid,Number(rn),input));
+    input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();input.blur();}});
+   });
+  }
+  const {data:auth}=await supabaseClient.auth.getUser();
+  if(auth?.user){
+   const {data:notes,error:nErr}=await supabaseClient.from('zakovat_notifications').select('title,message,created_at').eq('recipient_id',auth.user.id).order('created_at',{ascending:false}).limit(10);
+   if(!nErr&&notes?.length)out.innerHTML+=`<div style="margin-top:16px"><h4>🔔 Zakovat bildirishnomalari</h4>${notes.map(n=>`<article class="review-card"><b>${safeText(n.title)}</b><p>${safeText(n.message)}</p><small>${new Date(n.created_at).toLocaleString('uz-UZ')}</small></article>`).join('')}`;
+  }
+ }catch(e){out.innerHTML=`<div class="empty-panel">Doska yuklanmadi: ${safeText(e.message)}. Supabase ruxsatlari va SQL sozlamalarini tekshiring.</div>`;console.warn('Zakovat scoreboard',e);}
+}
+function ecLocalDateTime(iso){const d=new Date(iso);return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16);}
+async function loadContestDeadlineSettings(){const panel=document.getElementById('ecDeadlineAdmin');if(!panel)return;try{const {data,error}=await supabaseClient.from('contest_deadlines').select('contest_key,opens_at,closes_at').order('contest_key');if(error)throw error;const names={story:'Hikoyalar',photo:'Foto',video:'Video',zakovat:'Zakovat ro‘yxatdan o‘tish'};panel.innerHTML=`<div class="zakovat-admin-controls"><h4>Tanlov muddatlarini boshqarish</h4>${(data||[]).map(d=>`<div style="margin:10px 0;padding-bottom:10px;border-bottom:1px solid var(--line)"><b>${names[d.contest_key]||d.contest_key}</b><label>Boshlanish <input type="datetime-local" data-open-deadline="${d.contest_key}" value="${ecLocalDateTime(d.opens_at)}"></label><label>Tugash <input type="datetime-local" data-close-deadline="${d.contest_key}" value="${ecLocalDateTime(d.closes_at)}"></label></div>`).join('')}<button class="user-action warn" id="ecSaveDeadlines">Muddatlarni saqlash</button></div>`;panel.querySelector('#ecSaveDeadlines').onclick=async()=>{try{for(const d of data||[]){const open=panel.querySelector(`[data-open-deadline="${d.contest_key}"]`).value,close=panel.querySelector(`[data-close-deadline="${d.contest_key}"]`).value;if(!open||!close||new Date(close)<=new Date(open))throw new Error('Har tanlov uchun to‘g‘ri muddat kiriting');const {error:saveErr}=await supabaseClient.from('contest_deadlines').upsert({contest_key:d.contest_key,opens_at:new Date(open).toISOString(),closes_at:new Date(close).toISOString()},{onConflict:'contest_key'});if(saveErr)throw saveErr;}showToast('Tanlov muddatlari saqlandi');await syncContestDeadlinesFromDb();await loadContestDeadlineSettings();}catch(e){showToast('Muddat saqlanmadi: '+e.message);}};}catch(e){panel.innerHTML=`<p class="note">Muddat sozlamalari yuklanmadi: ${safeText(e.message)}</p>`;}}
+async function addZakovatGame(){const input=document.getElementById('ecNewGameDate');if(!input?.value){showToast('O‘yin sanasini kiriting');return;}try{const {data:existing,error}=await supabaseClient.from('zakovat_games').select('game_number').order('game_number');if(error)throw error;const next=Math.max(0,...(existing||[]).map(g=>g.game_number))+1;if(next>20)throw new Error('Maksimal 20 ta o‘yin');const {error:insertErr}=await supabaseClient.from('zakovat_games').insert({game_number:next,game_date:new Date(input.value).toISOString(),status:'scheduled'});if(insertErr)throw insertErr;showToast(`${next}-o‘yin qo‘shildi`);await syncContestDeadlinesFromDb();await loadZakovatBoard();await renderZakovatAdminScoreForm();}catch(e){showToast('O‘yin qo‘shilmadi: '+e.message);}}
+async function initZakovatBoardAdmin(){
+ const target=document.getElementById('zakovatBoardAdmin');if(!target)return;
+ const role=String(window.ecCurrentRole||'').toLowerCase();
+ if(!['admin','super_admin'].includes(role))return;
+ target.style.display='block';
+ target.innerHTML=`<div class="zakovat-admin-controls"><h4>⚙️ Zakovat boshqaruvi</h4><p class="note">Doska va boshqaruv bitta bo‘limda. Ballarni yuqoridagi jadvalning o‘zida o‘zgartiring. Har bir round 1–12 ball.</p><div id="zakovatAdminTeamNames"></div><div id="ecDeadlineAdmin"></div></div>`;
+ const {data:teams,error}=await supabaseClient.from('zakovat_teams').select('id,name').order('name');
+ if(error){target.insertAdjacentHTML('beforeend',`<p class="note">Jamoalar yuklanmadi: ${safeText(error.message)}</p>`);return;}
+ await renderZakovatAdminTeamNames(teams||[]);
+ await loadContestDeadlineSettings();
+}
+async function renderZakovatAdminScoreForm(){const box=document.getElementById('zakovatAdminScoreForm');if(!box)return;try{const [{data:teams,error:tErr},{data:games,error:gErr},{data:existingScores,error:sErr}]=await Promise.all([supabaseClient.from('zakovat_teams').select('id,name').order('name'),supabaseClient.from('zakovat_games').select('id,game_number,status').order('game_number'),supabaseClient.from('zakovat_scores').select('team_id,game_id,round_number,score')]);if(tErr)throw tErr;if(gErr)throw gErr;if(sErr)throw sErr;if(!teams?.length){box.innerHTML='<p class="note">Hozircha jamoalar yo‘q. Sardorlar Profil orqali jamoa yaratishi mumkin.</p>';return;}box.innerHTML=`<h4>Ball kiritish — 4 Game × 2 Round</h4>${(games||[]).filter(g=>Number(g.game_number)<=4).map(g=>`<div style="border-top:1px solid var(--line);padding:10px 0"><b>Game ${g.game_number}</b>${g.status!=='completed'?`<button class="user-action warn" data-finalize-game="${g.game_number}">O‘yinni tugatish va Top 3 e’lon qilish</button>`:''}${teams.map(t=>`<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:7px 0"><span style="min-width:130px">${safeText(t.name)}</span>${[1,2].map(rn=>{const score=existingScores.find(v=>v.team_id===t.id&&v.game_id===g.id&&Number(v.round_number||1)===rn)?.score??'';return `<label style="display:flex;align-items:center;gap:4px"><small>R${rn}</small><input type="number" min="0" max="12" value="${score}" id="zs_${g.id}_${t.id}_${rn}" style="width:65px" ${g.status==='completed'?'disabled':''}></label><button class="user-action" data-save-zscore="${g.id}|${t.id}|${rn}" ${g.status==='completed'?'disabled':''}>Saqlash</button>`;}).join('')}</div>`).join('')}</div>`).join('')}`;box.querySelectorAll('[data-save-zscore]').forEach(btn=>btn.onclick=async()=>{const [gid,tid,rn]=btn.dataset.saveZscore.split('|'),inp=box.querySelector(`#zs_${gid}_${tid}_${rn}`),score=Number(inp.value);if(!Number.isInteger(score)||score<0||score>12){showToast('Round balli 0–12 oralig‘ida bo‘lsin');return;}try{const {error}=await supabaseClient.from('zakovat_scores').upsert({team_id:tid,game_id:gid,round_number:Number(rn),score,updated_at:new Date().toISOString()},{onConflict:'team_id,game_id,round_number'});if(error)throw error;showToast('Ball saqlandi');await loadZakovatBoard();}catch(e){showToast('Ball saqlanmadi: '+e.message);}});box.querySelectorAll('[data-finalize-game]').forEach(btn=>btn.onclick=async()=>{const gameNo=Number(btn.dataset.finalizeGame);if(!confirm(`${gameNo}-game yopilib, Top 3 e’lon qilinsinmi?`))return;try{const {error}=await supabaseClient.rpc('zakovat_finalize_game',{game_number_input:gameNo});if(error)throw error;showToast('O‘yin yakunlandi.');await syncContestDeadlinesFromDb();await loadZakovatBoard();await renderZakovatAdminScoreForm();}catch(e){showToast('O‘yinni yakunlash xatosi: '+e.message);}});await renderZakovatAdminTeamNames(teams);}catch(e){box.innerHTML=`<p class="note">Admin boshqaruvi: ${safeText(e.message)}</p>`;}}
+async function renderZakovatAdminTeamNames(teams){
+ const panel=document.getElementById('zakovatAdminTeamNames');if(!panel)return;
+ if(!teams?.length){panel.innerHTML='<h4>👥 Jamoalar</h4><p class="note">Hozircha jamoalar yaratilmagan.</p>';return;}
+ try{
+  const teamIds=teams.map(t=>t.id);
+  const [{data:members,error:mErr},{data:guests,error:gErr}]=await Promise.all([
+   supabaseClient.from('zakovat_team_members').select('team_id,user_id').in('team_id',teamIds),
+   supabaseClient.from('zakovat_team_guest_members').select('team_id,full_name').in('team_id',teamIds)
+  ]);
+  if(mErr)throw mErr;if(gErr)throw gErr;
+  const userIds=[...new Set((members||[]).map(m=>m.user_id).filter(Boolean))];
+  let profiles=[];
+  if(userIds.length){const {data,error}=await supabaseClient.from('profiles').select('id,first_name,last_name,username,class_name').in('id',userIds);if(error)throw error;profiles=data||[];}
+  const byId=new Map(profiles.map(p=>[p.id,p]));
+  panel.innerHTML=`<h4>👥 Jamoalar (${teams.length})</h4><p class="note">Jamoa ustiga bosing — tarkibini ko‘rish mumkin. 👑 jamoa sardorini bildiradi.</p><div style="display:grid;gap:10px">${teams.map((t,i)=>{
+   const count=(members||[]).filter(m=>m.team_id===t.id).length+(guests||[]).filter(g=>g.team_id===t.id).length;
+   return `<article style="border:1px solid var(--line);border-radius:14px;overflow:hidden;background:rgba(255,255,255,.025)"><button type="button" data-team-toggle="${safeText(t.id)}" aria-expanded="false" style="display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;padding:14px;background:transparent;border:0;color:inherit;text-align:left;cursor:pointer"><span><b>${i+1}. ${safeText(t.name)}</b><small style="display:block;color:var(--muted);margin-top:4px">${count} nafar qatnashchi</small></span><span data-team-chevron="${safeText(t.id)}">⌄</span></button><div data-team-detail="${safeText(t.id)}" hidden style="padding:0 14px 14px;border-top:1px solid var(--line)"><div style="padding-top:10px;display:grid;gap:8px">${(members||[]).filter(m=>m.team_id===t.id).map(m=>{const u=byId.get(m.user_id)||{};const nm=((u.first_name||'')+' '+(u.last_name||'')).trim()||u.username||'Foydalanuvchi';const captain=m.user_id===t.captain_user_id;return `<div style="display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;background:rgba(255,255,255,.035)"><span style="font-size:18px">${captain?'👑':'👤'}</span><span><b>${safeText(nm)}${captain?' <span style="color:#EABF55">· Sardor</span>':''}</b><small style="display:block;color:var(--muted)">${safeText(u.class_name||'')}</small></span></div>`;}).join('')}${(guests||[]).filter(g=>g.team_id===t.id).map(g=>`<div style="display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;background:rgba(255,255,255,.035)"><span>👤</span><b>${safeText(g.full_name)}</b></div>`).join('')||''}<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px"><input data-team-rename-input="${safeText(t.id)}" value="${safeText(t.name)}" maxlength="40" aria-label="Jamoa nomi" style="flex:1;min-width:140px;padding:9px;border-radius:9px"><button type="button" class="user-action" data-team-rename="${safeText(t.id)}">Nomni saqlash</button></div></div></div></article>`;
+  }).join('')}</div>`;
+  panel.querySelectorAll('[data-team-toggle]').forEach(btn=>btn.onclick=()=>{const id=btn.dataset.teamToggle,detail=panel.querySelector(`[data-team-detail="${id}"]`),open=detail.hidden;detail.hidden=!open;btn.setAttribute('aria-expanded',String(open));const chevron=panel.querySelector(`[data-team-chevron="${id}"]`);if(chevron)chevron.textContent=open?'⌃':'⌄';});
+  panel.querySelectorAll('[data-team-rename]').forEach(btn=>btn.onclick=async()=>{const id=btn.dataset.teamRename,n=panel.querySelector(`[data-team-rename-input="${id}"]`).value.trim();try{const {error}=await supabaseClient.rpc('zakovat_rename_team',{team_id:id,new_name:n});if(error)throw error;showToast('Jamoa nomi saqlandi');await loadZakovatBoard();const {data,error:te}=await supabaseClient.from('zakovat_teams').select('id,name,captain_user_id').order('name');if(te)throw te;await renderZakovatAdminTeamNames(data||[]);}catch(e){showToast('Nomni o‘zgartirishda xato: '+e.message);}});
+ }catch(e){panel.innerHTML=`<h4>👥 Jamoalar</h4><p class="note">Jamoa tarkibini yuklashda xato: ${safeText(e.message)}</p>`;}
+}
+async function initZakovatAdminPanel(){
+ const box=document.getElementById('zakovatAdminProfile');if(!box)return;box.style.display='block';
+ box.innerHTML=`<div class="section-head"><h3>🧠 Zakovat boshqaruvi</h3></div><div class="user-management"><p class="note">Zakovatga ro‘yxatdan o‘tgan sardorlar va ishtirokchilar ro‘yxati. Jamoalar sardorlar tomonidan yaratiladi.</p><button class="user-action" id="zakovatRefresh">↻ Ro‘yxatni yangilash</button><div id="zakovatParticipantsTable" class="empty-panel">Yuklanmoqda…</div></div>`;
+ document.getElementById('zakovatRefresh').onclick=loadZakovatParticipants;await loadZakovatParticipants();
+}
+let zakovatRows=[];
+async function loadZakovatParticipants(){
+ const out=document.getElementById('zakovatParticipantsTable');if(!out)return;out.innerHTML='Yuklanmoqda…';
+ try{const {data:joined,error}=await supabaseClient.from('contest_participants').select('user_id,joined_at').eq('contest_key','zakovat').order('joined_at',{ascending:true});if(error)throw error;
+ const ids=(joined||[]).map(r=>r.user_id);if(!ids.length){zakovatRows=[];out.innerHTML='<div class="empty-panel">Zakovatga hali hech kim ro‘yxatdan o‘tmagan.</div>';return;}
+ const {data:profiles,error:pErr}=await supabaseClient.from('profiles').select('id,first_name,last_name,username,class_name').in('id',ids);if(pErr)throw pErr;
+ const map=new Map((profiles||[]).map(p=>[p.id,p]));zakovatRows=joined.map(j=>({...j,...(map.get(j.user_id)||{})}));
+ out.innerHTML=`<div style="overflow:auto"><table class="score-table"><thead><tr><th>#</th><th>Ism-familiya</th><th>Sinf</th><th>Ro‘yxatdan o‘tgan</th></tr></thead><tbody>${zakovatRows.map((r,i)=>`<tr><td>${i+1}</td><td>${safeText(((r.first_name||'')+' '+(r.last_name||'')).trim()||r.username||'—')}</td><td>${safeText(r.class_name||'—')}</td><td>${new Date(r.joined_at).toLocaleDateString('uz-UZ')}</td></tr>`).join('')}</tbody></table></div><p><b>Jami qatnashchilar: ${zakovatRows.length}</b></p>`;
+ }catch(err){out.innerHTML=`<div class="empty-panel">Ro‘yxatni yuklashda xato: ${safeText(err.message)}</div>`;console.error('Zakovat participants',err);}
+}
+
+const contestNames={story:'Hikoya',photo:'Foto',video:'Video',zakovat:'Zakovat'};
+async function joinContest(contestKey){
+  const joinBtn=document.querySelector(`[data-contest-join="${contestKey}"]`);
+  if(joinBtn){joinBtn.disabled=true;joinBtn.textContent='Ro‘yxatdan o‘tilmoqda…';}
+  try{
+    if(!supabaseClient)throw new Error('Supabase kutubxonasi yuklanmadi. Sahifani yangilang.');
+    const {data:authData,error:authErr}=await supabaseClient.auth.getUser();
+    if(authErr)throw authErr;
+    const user=authData?.user;
+    if(!user)throw new Error('Avval akkauntga kiring.');
+    if(new Date(EC_CONTEST_DATES[contestKey].end).getTime()<Date.now())throw new Error('Bu tanlov muddati tugagan. Qatnashish yopiq.');
+    const {error}=await supabaseClient.from('contest_participants').upsert(
+      {user_id:user.id,contest_key:contestKey},
+      {onConflict:'user_id,contest_key',ignoreDuplicates:true}
+    );
+    if(error)throw error;
+    closeContestDetails();
+    const messages={story:'Siz Hikoya tanloviga muvaffaqiyatli qatnashdingiz! Profil qismiga o‘tib hikoyangizni yozishingiz yoki faylini yuklashingiz mumkin.',photo:'Siz Foto tanloviga muvaffaqiyatli qatnashdingiz! Profil qismiga o‘tib rasmlaringizni yuklashingiz mumkin.',video:'Siz Video tanloviga muvaffaqiyatli qatnashdingiz! Profil qismiga o‘tib videongizni yuklashingiz mumkin.',zakovat:'Siz Zakovat musobaqasiga muvaffaqiyatli ro‘yxatdan o‘tdingiz! Ismingiz, familiyangiz va sinfingiz ishtirokchilar ro‘yxatiga qo‘shildi.'};
+    showJoinConfirmation(messages[contestKey]||'Tanlovga qatnashdingiz!');
+    await loadContestParticipations(user);
+  }catch(err){
+    console.error('Contest join error',err);
+    showToast('Qatnashishda xato: '+(err.message||'Ruxsat yoki Supabase sozlamasini tekshiring.'));
+  }finally{
+    if(joinBtn){joinBtn.disabled=false;joinBtn.textContent='Qatnashish';}
+  }
+}
+function showJoinConfirmation(message){
+  const modal=document.getElementById('contestModal'),content=document.getElementById('contestModalContent');
+  content.innerHTML=`<section class="join-confirmation"><div class="join-success-icon">✓</div><div class="join-kicker">ELEGANT CHALLENGE</div><h2>Tabriklaymiz!</h2><p class="join-message">${safeText(message)}</p><div class="join-actions"><button class="join-profile-btn" id="joinGoProfile">Profilga o‘tish <span>→</span></button><button class="join-close-btn" id="joinClose">Yopish</button></div></section>`;
+  modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+  content.querySelector('#joinGoProfile').onclick=()=>{closeContestDetails();switchHomeView('profile');};
+  content.querySelector('#joinClose').onclick=closeContestDetails;
+}
+async function loadContestParticipations(user){
+  try{await supabaseClient.rpc('cleanup_expired_contest_participations');}catch(cleanErr){console.warn('participation cleanup',cleanErr.message);}
+  const area=document.getElementById('profileContestArea');if(!area)return;
+  area.innerHTML='<h3 style="margin:20px 0 10px">Mening tanlovlarim</h3><p>Yuklanmoqda…</p>';
+  const {data,error}=await supabaseClient.from('contest_participants').select('contest_key,joined_at').eq('user_id',user.id).order('joined_at',{ascending:false});
+  if(error){area.innerHTML='<h3>Mening tanlovlarim</h3><p>Tanlov tizimi sozlanmoqda. Backend SQL sozlamalarini bajarish kerak.</p>';console.warn('participation fetch',error);return;}
+  if(!data?.length){area.innerHTML='<h3 style="margin:20px 0 10px">Mening tanlovlarim</h3><div class="empty-panel">Siz hali tanlovga qatnashmagansiz. Tanlovlar bo‘limidan qatnashing.</div>';return;}
+  area.innerHTML='<h3 style="margin:20px 0 10px">Mening tanlovlarim</h3>'+data.map(r=>contestSubmissionCard(r.contest_key)).join('');
+  data.forEach(r=>setupSubmissionForm(r.contest_key,user.id));applySubmissionDeadlineLocks();if(data.some(r=>r.contest_key==='zakovat'))await loadZakovatCaptainTeamForm(user);
+  const {data:submitted}=await supabaseClient.from('contest_submissions').select('contest_key,status,submitted_at,rating,review_comment,reviewed_at').eq('user_id',user.id).order('submitted_at',{ascending:false});
+  if(submitted){const latest={};submitted.forEach(r=>{if(!latest[r.contest_key])latest[r.contest_key]=r;});Object.entries(latest).forEach(([k,r])=>{const el=document.querySelector(`[data-submission-status="${k}"]`);if(el){const status=r.status==='submitted'?'Ko‘rib chiqilmoqda':r.status==='accepted'?'Qabul qilindi':r.status==='rejected'?'Rad etildi':r.status;el.innerHTML=`✅ Ish topshirilgan. Holati: ${safeText(status)}${r.rating!==null&&r.rating!==undefined?`<br><b>Baho: ${safeText(r.rating)}/100</b>`:''}${r.review_comment?`<br>Izoh: ${safeText(r.review_comment)}`:''}`;}});}
+}
+async function loadZakovatCaptainTeamForm(user){
+ const host=document.getElementById('zakovatCaptainTeamForm');if(!host)return;
+ try{
+  const {data:mine,error:mErr}=await supabaseClient.from('zakovat_teams').select('id,name,captain_user_id').eq('captain_user_id',user.id).maybeSingle();if(mErr)throw mErr;
+  if(mine){host.innerHTML=`<div class="review-card"><b>👑 Sizning jamoangiz: ${safeText(mine.name)}</b><p class="note">Jamoa muvaffaqiyatli yaratildi. Tarkibni o‘zgartirish uchun admin bilan bog‘laning.</p></div>`;return;}
+  const first=(user.user_metadata?.first_name||'').trim(),last=(user.user_metadata?.last_name||'').trim(),captainName=(first+' '+last).trim()||user.user_metadata?.username||'Siz';
+  host.innerHTML=`<div style="border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--card,rgba(255,255,255,.03));box-shadow:0 12px 35px rgba(0,0,0,.12)"><div style="padding:20px;background:linear-gradient(120deg,rgba(99,102,241,.2),rgba(14,165,233,.1));border-bottom:1px solid var(--line)"><div style="display:flex;align-items:center;gap:12px"><div style="width:46px;height:46px;display:grid;place-items:center;border-radius:14px;background:rgba(99,102,241,.2);font-size:23px">🧠</div><div><h3 style="margin:0 0 4px">O‘z jamoangizni tuzing</h3><p class="note" style="margin:0">Sardor + 5 nafar qatnashchi</p></div></div></div><form id="zakovatCaptainCreateForm" style="display:grid;gap:16px;padding:20px"><label style="display:grid;gap:8px;font-weight:650">🏷️ Jamoa nomi<input name="team_name" maxlength="40" required placeholder="Masalan: Bilimdonlar" style="width:100%;padding:12px;border-radius:10px"></label><div><b>Jamoa a’zolari</b><p class="note">Sardor avtomatik qo‘shiladi. Qolgan 5 qatnashchining ism-familiyasini o‘zlaridan so‘rab kiriting. Sayt username’larini qidirish yoki tanlash shart emas.</p><div style="display:flex;align-items:center;gap:10px;padding:12px;border:1px solid rgba(234,191,85,.35);border-radius:12px;background:rgba(234,191,85,.07);margin:12px 0"><span style="font-size:22px">👑</span><div><b>${safeText(captainName)}</b><small style="display:block;color:var(--muted)">Jamoa sardori · avtomatik</small></div></div>${[1,2,3,4,5].map(n=>`<label style="display:grid;gap:7px;padding:13px;margin:9px 0;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.02)"><span style="font-weight:650">${n+1}-qatnashchi</span><input data-member-name="${n}" maxlength="100" required placeholder="Ism Familiya" style="width:100%;padding:11px;border-radius:9px"></label>`).join('')}</div><button class="user-action" type="submit" style="padding:13px">✨ Jamoani yaratish</button></form></div>`;
+  const form=host.querySelector('#zakovatCaptainCreateForm');
+  form.addEventListener('submit',async e=>{e.preventDefault();const btn=form.querySelector('button[type="submit"]');btn.disabled=true;btn.textContent='Saqlanmoqda…';try{const names=[1,2,3,4,5].map(n=>form.querySelector(`[data-member-name="${n}"]`).value.trim());const users=[null,null,null,null,null];for(let i=0;i<5;i++){if(names[i].length<2)throw new Error(`${i+2}-qatnashchining ism-familiyasini kiriting.`);}const {error}=await supabaseClient.rpc('zakovat_create_captain_team',{team_name_input:form.elements.team_name.value.trim(),member_names_input:names,member_user_ids_input:users});if(error)throw error;showToast('Jamoangiz muvaffaqiyatli yaratildi!');await loadZakovatCaptainTeamForm(user);await loadZakovatBoard();}catch(err){showToast('Jamoa yaratilmadi: '+err.message);}finally{btn.disabled=false;btn.textContent='✨ Jamoani yaratish';}});
+ }catch(err){host.innerHTML=`<p class="note">Jamoa formasi yuklanmadi: ${safeText(err.message)}. Admin SQL migratsiyasini bajarishi kerak.</p>`;}
+}
+function applySubmissionDeadlineLocks(){document.querySelectorAll('[data-submission-form]').forEach(form=>{const key=form.dataset.submissionForm,d=EC_CONTEST_DATES[key],now=Date.now(),closed=!d||now<new Date(d.start).getTime()||now>new Date(d.end).getTime();form.querySelectorAll('input,textarea,button').forEach(el=>el.disabled=closed);form.querySelector('[data-deadline-note]')?.remove();if(closed){const note=document.createElement('p');note.className='note';note.dataset.deadlineNote='1';note.textContent=!d||now>new Date(d.end).getTime()?'Tanlov muddati tugagan. Yangi ish yuborish yopilgan.':'Tanlov hali boshlanmagan. Ish yuborish ochilganda mumkin bo‘ladi.';form.append(note);}});}
+function contestSubmissionCard(key){
+ const name=contestNames[key]||key;
+ if(key==='zakovat')return `<article style="border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0;background:rgba(255,255,255,.025)"><h4 style="margin:0">🧠 Zakovat musobaqasi</h4><div style="margin:8px 0;color:#A99DE0">✅ Siz Zakovatga ro‘yxatdan o‘tgansiz. Sardor bo‘lsangiz, jamoangizni shu yerdan yarating.</div><div id="zakovatCaptainTeamForm"></div></article>`;
+ let form='';
+ if(key==='story')form=`<form data-submission-form="story" style="display:grid;gap:12px;margin-top:12px"><label>Hikoyangiz matni<textarea name="story_text" rows="8" required placeholder="Hikoyangizni shu yerga yozing…" style="width:100%;padding:12px;border-radius:12px"></textarea></label><label>Yoki Word/PDF fayl (ixtiyoriy)<input type="file" name="file" accept=".doc,.docx,.pdf,.txt"></label><button class="primary" type="submit">Hikoyani topshirish</button></form>`;
+ if(key==='photo')form=`<form data-submission-form="photo" style="display:grid;gap:12px;margin-top:12px"><label>Rasm(lar) yuklang<input type="file" name="file" accept="image/jpeg,image/png" multiple required></label><label>Izoh<textarea name="caption" rows="3" placeholder="Rasm(lar) haqida 1–5 gap"></textarea></label><button class="primary" type="submit">Rasm(lar)ni topshirish</button></form>`;
+ if(key==='video')form=`<form data-submission-form="video" style="display:grid;gap:12px;margin-top:12px"><label>Video fayl (MP4)<input type="file" name="file" accept="video/mp4,video/*" required></label><label>Video nomi / izoh<textarea name="caption" rows="3" placeholder="Video mavzusi yoki ishlatilgan AI vositalari"></textarea></label><button class="primary" type="submit">Videoni topshirish</button></form>`;
+ return `<article style="border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0;background:rgba(255,255,255,.025)"><h4 style="margin:0">${key==='story'?'📖':key==='photo'?'📷':'🎬'} ${safeText(name)} tanlovi</h4><div data-submission-status="${key}" style="margin:8px 0;color:#A99DE0">Ishingizni shu yerda topshiring.</div>${form}</article>`;
+}
+function setupSubmissionForm(key,userId){
+ const form=document.querySelector(`[data-submission-form="${key}"]`);if(!form)return;
+ form.addEventListener('submit',async e=>{e.preventDefault();const submit=form.querySelector('button[type=submit]');submit.disabled=true;submit.textContent='Yuborilmoqda…';
+ try{
+  const fd=new FormData(form),files=Array.from(fd.getAll('file')).filter(f=>f&&f.size),textValue=fd.get('story_text')||'',caption=fd.get('caption')||'';const uploadedPaths=[];
+  for(const file of files){const ext=(file.name.split('.').pop()||'file').replace(/[^a-z0-9]/gi,'').toLowerCase();const filePath=`${userId}/${key}/${Date.now()}_${Math.random().toString(36).slice(2,8)}.${ext}`;const {error:upErr}=await supabaseClient.storage.from('contest-submissions').upload(filePath,file,{upsert:false});if(upErr)throw upErr;uploadedPaths.push(filePath);}
+  if(key==='story'&&!textValue.trim()&&!uploadedPaths.length)throw new Error('Hikoya matni yoki fayl kiriting.');
+  if(key==='photo'&&!uploadedPaths.length)throw new Error('Kamida bitta rasm tanlang.');
+  if(key==='video'&&!uploadedPaths.length)throw new Error('Video fayl tanlang.');
+  const records=uploadedPaths.length?uploadedPaths.map(path=>({user_id:userId,contest_key:key,story_text:textValue||null,caption:caption||null,file_path:path,status:'submitted'})):[{user_id:userId,contest_key:key,story_text:textValue||null,caption:caption||null,file_path:null,status:'submitted'}];
+  const {error:dbErr}=await supabaseClient.from('contest_submissions').insert(records);if(dbErr)throw dbErr;
+  const status=document.querySelector(`[data-submission-status="${key}"]`);if(status)status.textContent='✅ Topshirildi. Ishingiz admin tomonidan ko‘rib chiqiladi.';form.reset();showToast('Ishingiz muvaffaqiyatli topshirildi!');
+ }catch(err){console.error('Submission error',err);showToast('Yuklashda xato: '+(err.message||''));}
+ finally{submit.disabled=false;submit.textContent=key==='story'?'Hikoyani topshirish':key==='photo'?'Rasm(lar)ni topshirish':'Videoni topshirish';}
+ });
+}
+let activeReviewKey='story';
+const leaderboardNames={story:'Hikoya',photo:'Foto',video:'Video'};
+function initAdminLeaderboardPanel(){
+ const host=document.getElementById('adminLeaderboardPanel');if(!host)return;
+ host.innerHTML=`<div class="section-head"><div><h3>🏆 Tanlovlar reytingi</h3><p style="margin:6px 0 0;color:var(--muted);font-size:13px">Har bir yo‘nalishda eng yuqori baholangan o‘quvchilar.</p></div><button class="user-action" id="refreshLeaderboards">↻ Yangilash</button></div><div class="review-tabs"><button class="review-tab active" data-leader-tab="story">📖 Hikoyalar</button><button class="review-tab" data-leader-tab="photo">📷 Fotolar</button><button class="review-tab" data-leader-tab="video">🎬 Videolar</button></div><div id="contestFinalizeControl" style="margin:12px 0"></div><div id="leaderboardContent"><div class="review-empty">Reyting yuklanmoqda…</div></div>`;
+ host.querySelectorAll('[data-leader-tab]').forEach(b=>b.onclick=()=>{host.querySelectorAll('[data-leader-tab]').forEach(x=>x.classList.toggle('active',x===b));loadContestLeaderboard(b.dataset.leaderTab);});
+ document.getElementById('refreshLeaderboards').onclick=()=>loadContestLeaderboard(host.querySelector('[data-leader-tab].active')?.dataset.leaderTab||'story');
+ loadContestLeaderboard('story');
+}
+async function refreshContestFinalizeControl(key){
+ const panel=document.getElementById('contestFinalizeControl');if(!panel)return;
+ if(!['story','photo','video'].includes(key)){panel.innerHTML='';return;}
+ const role=String(window.ecCurrentRole||'').toLowerCase();
+ if(!['admin','super_admin'].includes(role)){panel.innerHTML='';return;}
+ panel.innerHTML='<div class="review-empty">Tanlov yakunlash holati tekshirilmoqda…</div>';
+ try{
+  const [{data:deadlineRows,error:de},{data:finalRows,error:fe}]=await Promise.all([
+   supabaseClient.from('contest_deadlines').select('contest_key,closes_at').eq('contest_key',key),
+   supabaseClient.from('contest_finalizations').select('contest_key,finalized_at').eq('contest_key',key)
+  ]);
+  if(de)throw de;if(fe)throw fe;
+  const closeAt=deadlineRows?.[0]?.closes_at||EC_CONTEST_DATES[key]?.end;
+  const ended=closeAt&&Date.now()>=new Date(closeAt).getTime();
+  const done=!!finalRows?.length;
+  panel.innerHTML=`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px;border:1px solid var(--line);border-radius:12px"><span style="color:var(--muted)">${done?'✅ Tanlov yakunlangan':ended?'⏰ Tanlov muddati tugagan — natijani tekshirib yakunlash mumkin':'🔒 Tanlov tugash sanasigacha tugatish bloklangan'}</span><button class="user-action warn" id="contestFinalizeBtn" ${(!ended||done)?'disabled':''}>🏁 Tanlovni tugatish</button></div>`;
+  const btn=panel.querySelector('#contestFinalizeBtn');
+  if(btn)btn.onclick=()=>openContestFinalizePreview(key);
+ }catch(e){panel.innerHTML=`<div class="review-empty">Yakunlash holatini tekshirish xatosi: ${safeText(e.message)}. Avval yakunlash SQL migratsiyasini ishga tushiring.</div>`;}
+}
+async function openContestFinalizePreview(key){
+ try{
+  const {data:rows,error}=await supabaseClient.from('contest_submissions').select('user_id,rating,status').eq('contest_key',key).not('rating','is',null).neq('status','rejected').order('rating',{ascending:false});
+  if(error)throw error;
+  const best=new Map();(rows||[]).forEach(r=>{const prev=best.get(r.user_id);if(!prev||Number(r.rating)>Number(prev.rating))best.set(r.user_id,r);});
+  const ranked=[...best.values()].sort((a,b)=>Number(b.rating)-Number(a.rating)).slice(0,3);
+  if(!ranked.length)throw new Error('Yakunlash uchun baholangan ish topilmadi.');
+  const {data:profiles,error:pe}=await supabaseClient.from('profiles').select('id,first_name,last_name,username,class_name').in('id',ranked.map(r=>r.user_id));
+  if(pe)throw pe;
+  const byId=Object.fromEntries((profiles||[]).map(u=>[u.id,u]));
+  const result=ranked.map((r,i)=>{const u=byId[r.user_id]||{};return {rank:i+1,user_id:r.user_id,rating:Number(r.rating),name:((u.first_name||'')+' '+(u.last_name||'')).trim()||u.username||'Ishtirokchi',class_name:u.class_name||'—'};});
+  const title=({story:'Hikoyalar',photo:'Foto',video:'Video'})[key]||key;
+  const content=document.getElementById('contestModalContent');
+  content.innerHTML=`<h2>🏁 ${safeText(title)} tanlovini yakunlash</h2><p>Natijalarni tekshiring. Yakunlangandan keyin reytingni e’lon qilish uchun bildirishnomalar barcha foydalanuvchilarga yuboriladi.</p><table class="score-table" style="width:100%"><thead><tr><th>O‘rin</th><th>Ishtirokchi</th><th>Sinf</th><th>Ball</th><th>Sovrin</th></tr></thead><tbody>${result.map(r=>`<tr><td>${r.rank===1?'🥇 1':r.rank===2?'🥈 2':'🥉 3'}</td><td>${safeText(r.name)}</td><td>${safeText(r.class_name)}</td><td><b>${r.rating}/100</b></td><td>${r.rank===1?'100 000 so‘m + sertifikat':'Sertifikat'}</td></tr>`).join('')}</tbody></table><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px"><button class="primary" id="contestFinalizeConfirm">Yakunlash va hammaga xabar berish</button><button class="user-action" id="contestFinalizeExit">Chiqish</button></div>`;
+  const modal=document.getElementById('contestModal');modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+  content.querySelector('#contestFinalizeExit').onclick=closeContestDetails;
+  content.querySelector('#contestFinalizeConfirm').onclick=async function(){const btn=this;btn.disabled=true;btn.textContent='Yakunlanmoqda…';try{const {error:rpcErr}=await supabaseClient.rpc('contest_finalize_and_notify',{contest_key_input:key,results_input:result.map(({rank,user_id,rating})=>({rank,user_id,rating}))});if(rpcErr)throw rpcErr;showToast(`${title} tanlovi yakunlandi, bildirishnomalar yuborildi.`);closeContestDetails();await loadContestLeaderboard(key);await refreshContestFinalizeControl(key);await loadAdminNotifications();}catch(e){showToast('Yakunlashda xato: '+e.message);btn.disabled=false;btn.textContent='Yakunlash va hammaga xabar berish';}};
+ }catch(e){showToast('Yakunlash oynasi ochilmadi: '+e.message);}
+}
+async function loadContestLeaderboard(key='story'){
+ const target=document.getElementById('leaderboardContent');if(!target)return;
+ target.innerHTML='<div class="review-empty">Reyting yangilanmoqda…</div>';
+ try{
+  const {data:rows,error}=await supabaseClient.from('contest_submissions').select('user_id,rating,status,reviewed_at').eq('contest_key',key).not('rating','is',null).neq('status','rejected').order('rating',{ascending:false});
+  if(error)throw error;
+  if(!rows?.length){target.innerHTML='<div class="review-empty">'+leaderboardNames[key]+' tanlovida hali baholangan ishlar yo‘q.</div>';return;}
+  // One leaderboard entry per student: use their highest awarded score in this contest.
+  const bestByUser=new Map();
+  rows.forEach(r=>{const old=bestByUser.get(r.user_id);if(!old||Number(r.rating)>Number(old.rating))bestByUser.set(r.user_id,r);});
+  const ranked=[...bestByUser.values()].sort((a,b)=>Number(b.rating)-Number(a.rating));
+  const ids=ranked.map(r=>r.user_id);
+  const {data:profiles,error:pe}=await supabaseClient.from('profiles').select('id,first_name,last_name,username,class_name').in('id',ids);if(pe)throw pe;
+  const byId=Object.fromEntries((profiles||[]).map(p=>[p.id,p]));
+  target.innerHTML=`<div class="review-meta">${leaderboardNames[key]} · ${ranked.length} nafar baholangan qatnashchi</div><div style="overflow-x:auto"><table class="score-table" style="width:100%;border-collapse:collapse"><thead><tr><th>O‘rin</th><th>O‘quvchi</th><th>Sinf</th><th>Ball</th></tr></thead><tbody>${ranked.map((r,i)=>{const u=byId[r.user_id]||{};const name=((u.first_name||'')+' '+(u.last_name||'')).trim()||u.username||'O‘quvchi';return `<tr><td>${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</td><td><b>${safeText(name)}</b></td><td>${safeText(u.class_name||'—')}</td><td><b style="color:#F5B52E">${safeText(r.rating)}/100</b></td></tr>`;}).join('')}</tbody></table></div><p style="color:var(--muted);font-size:12px;margin-top:10px">Bir o‘quvchida bir nechta ish baholangan bo‘lsa, uning eng yuqori bali hisobga olinadi.</p>`;
+ }catch(e){target.innerHTML=`<div class="review-empty">Reytingni yuklab bo‘lmadi: ${safeText(e.message)}</div>`;console.error('Leaderboard load',e);}
+}
+function initAdminReviewPanel(){
+ const host=document.getElementById('adminReviewPanel');if(!host)return;
+ host.innerHTML=`<div class="section-head"><h3>📥 Topshirilgan ishlarni baholash</h3><button class="user-action" id="refreshReviews">↻ Yangilash</button></div><div class="review-tabs"><button class="review-tab active" data-review-tab="story">📖 Hikoyalar</button><button class="review-tab" data-review-tab="photo">📷 Fotolar</button><button class="review-tab" data-review-tab="video">🎬 Videolar</button></div><div id="reviewSubmissionsList"><div class="review-empty">Ishlar yuklanmoqda…</div></div>`;
+ host.querySelectorAll('[data-review-tab]').forEach(b=>b.onclick=()=>{activeReviewKey=b.dataset.reviewTab;host.querySelectorAll('[data-review-tab]').forEach(x=>x.classList.toggle('active',x===b));loadAdminSubmissions(activeReviewKey);});
+ document.getElementById('refreshReviews').onclick=()=>{loadAdminSubmissions(activeReviewKey);loadAdminNotifications();};
+ loadAdminSubmissions(activeReviewKey);
+}
+async function loadAdminSubmissions(key='story'){
+ const target=document.getElementById('reviewSubmissionsList');if(!target)return;target.innerHTML='<div class="review-empty">Yuklanmoqda…</div>';
+ try{
+  const {data:rows,error}=await supabaseClient.from('contest_submissions').select('*').eq('contest_key',key).order('submitted_at',{ascending:false});if(error)throw error;
+  if(!rows?.length){target.innerHTML='<div class="review-empty">Bu turdagi tanlovga hali ish topshirilmagan.</div>';return;}
+  const ids=[...new Set(rows.map(r=>r.user_id))];const {data:profiles,error:pe}=await supabaseClient.from('profiles').select('id,first_name,last_name,username,class_name').in('id',ids);if(pe)throw pe;
+  const byId=Object.fromEntries((profiles||[]).map(x=>[x.id,x]));
+  const cards=await Promise.all(rows.map(async r=>{const u=byId[r.user_id]||{};const name=((u.first_name||'')+' '+(u.last_name||'')).trim()||u.username||'O‘quvchi';let file='';if(r.file_path){const filename=(r.file_path.split('/').pop()||'contest-file').replace(/[^a-zA-Z0-9._-]/g,'_');const {data:link}=await supabaseClient.storage.from('contest-submissions').createSignedUrl(r.file_path,3600,{download:filename});if(link?.signedUrl){const downloadButton=key==='photo'||key==='video'?`<a class="review-file" href="${safeText(link.signedUrl)}" download="${safeText(filename)}" target="_blank" rel="noopener">⬇️ ${key==='photo'?'Rasmni':'Videoni'} yuklab olish</a>`:`<a class="review-file" href="${safeText(link.signedUrl)}" target="_blank" rel="noopener">📎 Hikoya faylini ko‘rish</a>`;file=downloadButton;}}
+   const storyCopy=r.story_text?`<button type="button" class="user-action" data-copy-story="${r.id}">📋 Hikoya matnini nusxalash</button>`:'';
+   return `<article class="review-card"><h4>${key==='story'?'📖':key==='photo'?'📷':'🎬'} ${safeText(name)}</h4><div class="review-meta">${safeText(u.class_name||'Sinf ko‘rsatilmagan')} · ${new Date(r.submitted_at).toLocaleString('uz-UZ')} · ${r.status==='submitted'?'Yangi topshirildi':safeText(r.status)}</div>${r.story_text?`<div style="white-space:pre-wrap;line-height:1.65;margin:10px 0" data-story-text="${r.id}">${safeText(r.story_text)}</div>${storyCopy}`:''}${r.caption?`<p>${safeText(r.caption)}</p>`:''}${file}<label> Baho (0–100)<input type="number" min="0" max="100" step="1" data-rating="${r.id}" value="${r.rating??''}" placeholder="Masalan, 90"></label><label> Izoh<textarea rows="2" data-comment="${r.id}" placeholder="O‘quvchiga fikr-mulohaza...">${safeText(r.review_comment||'')}</textarea></label><label> Natija<select data-status="${r.id}"><option value="accepted" ${r.status==='accepted'?'selected':''}>Qabul qilindi</option><option value="rejected" ${r.status==='rejected'?'selected':''}>Rad etildi</option><option value="reviewing" ${r.status==='reviewing'?'selected':''}>Qayta ko‘rib chiqilmoqda</option></select></label><button class="primary" data-save-review="${r.id}">Bahoni saqlash</button></article>`;
+  }));target.innerHTML=cards.join('');
+  target.querySelectorAll('[data-copy-story]').forEach(btn=>btn.onclick=async()=>{const id=btn.dataset.copyStory;const text=target.querySelector(`[data-story-text="${id}"]`)?.innerText||'';try{await navigator.clipboard.writeText(text);showToast('Hikoya matni nusxalandi.');}catch(e){showToast('Nusxalash uchun matnni belgilang va Ctrl+C bosing.');}});
+  target.querySelectorAll('[data-save-review]').forEach(btn=>btn.onclick=async()=>{const id=btn.dataset.saveReview;const ratingEl=target.querySelector(`[data-rating="${id}"]`),commentEl=target.querySelector(`[data-comment="${id}"]`),statusEl=target.querySelector(`[data-status="${id}"]`);const rating=ratingEl.value===''?null:Number(ratingEl.value);if(rating!==null&&(!Number.isFinite(rating)||rating<0||rating>100)){showToast('Baho 0 dan 100 gacha bo‘lishi kerak.');return;}btn.disabled=true;btn.textContent='Saqlanmoqda…';try{const {data:auth}=await supabaseClient.auth.getUser();const {error}=await supabaseClient.from('contest_submissions').update({rating,review_comment:commentEl.value.trim()||null,status:statusEl.value,reviewed_by:auth.user.id,reviewed_at:new Date().toISOString()}).eq('id',id);if(error)throw error;showToast('Baho muvaffaqiyatli saqlandi.');loadAdminSubmissions(key);loadContestLeaderboard(key);}catch(e){showToast('Bahoni saqlashda xato: '+e.message);btn.disabled=false;btn.textContent='Bahoni saqlash';}});
+ }catch(e){target.innerHTML=`<div class="review-empty">Ishlarni yuklab bo‘lmadi: ${safeText(e.message)}</div>`;console.error('Admin review load',e);}
+}
+async function loadAdminNotifications(){
+ const target=document.getElementById('notificationsPanel');if(!target||!supabaseClient)return;
+ try{const {data:auth}=await supabaseClient.auth.getUser();if(!auth.user)return;
+  const [{data:notes,error},{data:zn,error:ze},{data:cn,error:ce}]=await Promise.all([
+   supabaseClient.from('contest_notifications').select('id,submission_id,title,message,created_at,read_at').eq('recipient_id',auth.user.id).order('created_at',{ascending:false}).limit(50),
+   supabaseClient.from('zakovat_notifications').select('id,title,message,created_at,read_at').eq('recipient_id',auth.user.id).order('created_at',{ascending:false}).limit(50),
+   supabaseClient.from('contest_result_notifications').select('id,contest_key,title,message,created_at,read_at').eq('recipient_id',auth.user.id).order('created_at',{ascending:false}).limit(50)
+  ]);
+  if(error)throw error;if(ze)throw ze;if(ce)throw ce;
+  const all=[...(notes||[]).map(n=>({...n,kind:'contest'})),...(zn||[]).map(n=>({...n,kind:'zakovat'})),...(cn||[]).map(n=>({...n,kind:'contest_result'}))].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,50);
+  if(!all.length){target.innerHTML='Hozircha yangi bildirishnomalar yo‘q.';return;}
+  target.className='';target.innerHTML=all.map(n=>`<article class="review-card"><b>${safeText(n.title)}</b><p style="white-space:pre-wrap">${safeText(n.message)}</p><div class="review-meta">${new Date(n.created_at).toLocaleString('uz-UZ')} ${n.read_at?'· O‘qilgan':'· Yangi'}</div>${n.kind==='contest'?`<button class="user-action" data-open-submission="${safeText(n.submission_id)}">Ishni ko‘rish va baholash</button>`:''}</article>`).join('');
+  target.querySelectorAll('[data-open-submission]').forEach(b=>b.onclick=async()=>{switchHomeView('profile');const {data:r}=await supabaseClient.from('contest_submissions').select('contest_key').eq('id',b.dataset.openSubmission).maybeSingle();if(r){activeReviewKey=r.contest_key;document.querySelectorAll('[data-review-tab]').forEach(x=>x.classList.toggle('active',x.dataset.reviewTab===activeReviewKey));await loadAdminSubmissions(activeReviewKey);}});
+  const unread=(notes||[]).filter(n=>!n.read_at).map(n=>n.id);if(unread.length)await supabaseClient.from('contest_notifications').update({read_at:new Date().toISOString()}).in('id',unread);
+  const zunread=(zn||[]).filter(n=>!n.read_at).map(n=>n.id);if(zunread.length)await supabaseClient.from('zakovat_notifications').update({read_at:new Date().toISOString()}).in('id',zunread);const cunread=(cn||[]).filter(n=>!n.read_at).map(n=>n.id);if(cunread.length)await supabaseClient.from('contest_result_notifications').update({read_at:new Date().toISOString()}).in('id',cunread);
+ }catch(e){target.innerHTML=`Bildirishnomalarni yuklab bo‘lmadi: ${safeText(e.message)}`;console.warn('notifications',e);}
+}
+function closeContestDetails(){const modal=document.getElementById('contestModal');if(!modal)return;modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+document.querySelectorAll('[data-contest-details]').forEach(btn=>btn.addEventListener('click',()=>openContestDetails(btn.dataset.contestDetails)));
+document.getElementById('contestModalClose')?.addEventListener('click',closeContestDetails);
+document.getElementById('contestModal')?.addEventListener('click',e=>{if(e.target.id==='contestModal')closeContestDetails();});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeContestDetails();});
+
+let activeProjectTab='story';
+async function loadPublicProjects(key=activeProjectTab){
+ activeProjectTab=key;const host=document.getElementById('projectsGallery');if(!host)return;host.innerHTML='<div class="review-empty">Yuklanmoqda…</div>';
+ try{const {data,error}=await supabaseClient.from('projects_public').select('id,contest_key,story_text,caption,file_path,submitted_at,first_name,last_name,username,class_name').eq('contest_key',key).order('submitted_at',{ascending:false});if(error)throw error;
+ if(!data?.length){host.innerHTML='<div class="review-empty">Bu bo‘limda hozircha topshirilgan ishlar yo‘q.</div>';return;}
+ const cards=data.map(r=>{const who=((r.first_name||'')+' '+(r.last_name||'')).trim()||r.username||'Ishtirokchi';let media='';if(r.file_path){const {data:pub}=supabaseClient.storage.from('contest-submissions').getPublicUrl(r.file_path);const url=pub?.publicUrl||'';if(key==='photo')media=`<img src="${safeText(url)}" alt="Tanlov rasmi" style="width:100%;max-height:420px;object-fit:contain;border-radius:12px;background:#080817;margin:10px 0">`;else if(key==='video')media=`<video controls preload="metadata" src="${safeText(url)}" style="width:100%;max-height:420px;border-radius:12px;margin:10px 0"></video>`;else media=`<a class="review-file" href="${safeText(url)}" target="_blank" rel="noopener">📎 Hikoya faylini ko‘rish</a>`;}
+ return `<article class="project-card" data-project-id="${safeText(r.id)}" style="border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0;background:rgba(255,255,255,.025)"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><strong>${safeText(who)}</strong><span style="color:var(--muted)">${safeText(r.class_name||'')} · ${r.submitted_at?new Date(r.submitted_at).toLocaleDateString('uz-UZ'):''}</span></div>${key==='story'&&r.story_text?`<div style="white-space:pre-wrap;line-height:1.7;margin-top:12px">${safeText(r.story_text)}</div>`:''}${media}${r.caption?`<p style="white-space:pre-wrap;color:var(--muted);margin-top:8px">${safeText(r.caption)}</p>`:''}<div class="project-social"><button class="project-like-btn" data-project-like="${safeText(r.id)}" type="button">🤍 Like <span data-like-count>…</span></button><button class="project-comment-toggle" data-toggle-comments type="button" aria-expanded="false">💬 <span data-comment-count>…</span> komment <span class="toggle-chevron">⌄</span></button></div><section class="project-comment-panel hidden" data-comment-panel hidden><div class="project-comments" data-project-comments></div><form class="project-comment-form" data-project-comment-form="${safeText(r.id)}"><textarea name="comment" rows="2" required maxlength="1000" placeholder="Komment yozing…"></textarea><button class="primary" type="submit">Yuborish</button></form></section></article>`}).join('');host.innerHTML=cards;host.querySelectorAll('[data-project-like]').forEach(b=>b.onclick=()=>toggleProjectLike(b.dataset.projectLike));host.querySelectorAll('[data-toggle-comments]').forEach(btn=>btn.onclick=()=>{const card=btn.closest('.project-card');const panel=card?.querySelector('[data-comment-panel]');if(!panel)return;const opening=panel.classList.contains('hidden');panel.classList.toggle('hidden',!opening);panel.hidden=!opening;btn.setAttribute('aria-expanded',opening?'true':'false');btn.querySelector('.toggle-chevron').textContent=opening?'⌃':'⌄';});host.querySelectorAll('[data-project-comment-form]').forEach(f=>f.onsubmit=e=>{e.preventDefault();submitProjectComment(f.dataset.projectCommentForm,f);});await loadProjectSocial(key);
+ }catch(e){host.innerHTML='<div class="review-empty">Galereyani yuklashda xato: '+safeText(e.message||'')+'</div>';console.error('Projects gallery',e);}
+}
+
+async function loadProjectSocial(key){
+ const host=document.getElementById('projectsGallery');if(!host)return;
+ try{
+  const {data:auth}=await supabaseClient.auth.getUser();const uid=auth?.user?.id||null;
+  const cards=[...host.querySelectorAll('[data-project-id]')];
+  await Promise.all(cards.map(async card=>{
+   const id=card.dataset.projectId;const likeCount=card.querySelector('[data-like-count]');const commentCount=card.querySelector('[data-comment-count]');const commentsHost=card.querySelector('[data-project-comments]');const likeBtn=card.querySelector('[data-project-like]');
+   const [likesRes,commentsRes]=await Promise.all([supabaseClient.from('project_likes').select('user_id',{count:'exact'}).eq('submission_id',id),supabaseClient.from('project_comments').select('id,user_id,comment_text,created_at').eq('submission_id',id).order('created_at',{ascending:true})]);
+   if(likesRes.error)throw likesRes.error;if(commentsRes.error)throw commentsRes.error;
+   const totalLikes=likesRes.count??(likesRes.data||[]).length;const liked=uid&&(likesRes.data||[]).some(x=>x.user_id===uid);if(likeCount)likeCount.textContent=totalLikes;if(likeBtn){likeBtn.textContent=(liked?'❤️ Liked':'🤍 Like')+' '+totalLikes;likeBtn.dataset.liked=liked?'1':'0';}if(commentCount)commentCount.textContent=(commentsRes.data||[]).length;
+   const commentRows=commentsRes.data||[];if(!commentsHost) return;if(!commentRows.length){commentsHost.innerHTML='<div style="color:var(--muted);font-size:.9em">Hozircha kommentlar yo‘q.</div>';return;}
+   const ids=[...new Set(commentRows.map(c=>c.user_id))];const {data:profiles,error:profileErr}=await supabaseClient.from('profiles').select('id,first_name,last_name,username,class_name').in('id',ids);if(profileErr)throw profileErr;const map=Object.fromEntries((profiles||[]).map(p=>[p.id,p]));
+   commentsHost.innerHTML=commentRows.map(c=>{const u=map[c.user_id]||{};const nm=((u.first_name||'')+' '+(u.last_name||'')).trim()||u.username||'Foydalanuvchi';return `<div class="project-comment-item"><div class="project-comment-author"><strong>${safeText(nm)}</strong><small>${safeText(u.class_name||'')}</small></div><div class="project-comment-text">${safeText(c.comment_text)}</div><small class="project-comment-time">${new Date(c.created_at).toLocaleString('uz-UZ')}</small></div>`}).join('');
+  }));
+ }catch(e){console.error('Project social loading',e);host.querySelectorAll('[data-project-comments]').forEach(x=>x.innerHTML='<small style="color:var(--muted)">Like/comment yuklanmadi: '+safeText(e.message||'')+'</small>');}
+}
+async function toggleProjectLike(submissionId){
+ try{const {data:auth}=await supabaseClient.auth.getUser();if(!auth.user){showToast('Like bosish uchun tizimga kiring.');return;}const {data:existing,error}=await supabaseClient.from('project_likes').select('submission_id').eq('submission_id',submissionId).eq('user_id',auth.user.id).maybeSingle();if(error)throw error;if(existing){const {error:del}=await supabaseClient.from('project_likes').delete().eq('submission_id',submissionId).eq('user_id',auth.user.id);if(del)throw del;}else{const {error:ins}=await supabaseClient.from('project_likes').insert({submission_id:submissionId,user_id:auth.user.id});if(ins)throw ins;}await loadProjectSocial(activeProjectTab);
+ }catch(e){showToast('Like bajarilmadi: '+e.message);}
+}
+async function submitProjectComment(submissionId,form){
+ try{const {data:auth}=await supabaseClient.auth.getUser();if(!auth.user){showToast('Komment yozish uchun tizimga kiring.');return;}const textVal=form.elements.comment.value.trim();if(!textVal)return;const {error}=await supabaseClient.from('project_comments').insert({submission_id:submissionId,user_id:auth.user.id,comment_text:textVal});if(error)throw error;form.reset();await loadProjectSocial(activeProjectTab);showToast('Komment qo‘shildi.');
+ }catch(e){showToast('Komment yuborilmadi: '+e.message);}
+}
+
+function initProjectsGallery(){const tabs=document.getElementById('projectTabs');if(!tabs)return;tabs.querySelectorAll('[data-project-tab]').forEach(b=>b.onclick=()=>{tabs.querySelectorAll('[data-project-tab]').forEach(x=>x.classList.toggle('active',x===b));loadPublicProjects(b.dataset.projectTab);});document.getElementById('refreshProjects')?.addEventListener('click',()=>loadPublicProjects(activeProjectTab));loadPublicProjects('story');}
+function switchHomeView(view){
+  document.querySelectorAll('.home-view').forEach(v=>v.classList.toggle('active',v.id==='view-'+view));
+  document.querySelectorAll('.nav-item[data-view]').forEach(v=>v.classList.toggle('active',v.dataset.view===view));
+  const labels={home:'Bosh sahifa',challenges:'Tanlovlar',projects:'Loyihalar',profile:'Profil',notifications:'Bildirishnomalar',users:'Foydalanuvchilar'};
+  const title=document.querySelector('.home-top .home-title');
+  if(title) title.textContent=view==='home'?document.getElementById('greetingTitle').textContent:labels[view];
+  if(view==='notifications'&&typeof loadAdminNotifications==='function')loadAdminNotifications();
+  if(view==='profile'&&['admin','super_admin'].includes(String(window.ecCurrentRole||'').toLowerCase()))loadZakovatBoard();
+  if(view==='projects')loadPublicProjects(activeProjectTab);
+}
+function showToast(text){
+  const toast=document.getElementById('homeToast');
+  if(!toast)return;
+  toast.textContent=text;toast.classList.add('show');
+  window.clearTimeout(showToast.timer);showToast.timer=window.setTimeout(()=>toast.classList.remove('show'),3200);
+}
+async function logoutFromHome(){
+  await supabaseClient.auth.signOut();
+  dashboard.style.display='none';
+  document.querySelector('.brand-side').classList.remove('hidden');
+  document.querySelector('.page').classList.remove('home-active');
+  document.querySelector('.brand-side').style.display='';
+  document.querySelector('.auth-wrap').style.display='';
+  document.querySelector('.page').style.display='';
+  showAuth();setMode('login');showMessage('Akkauntdan chiqdingiz.','ok');
+}
+function showAuth(){
+  authForms.forEach(f=>f.classList.remove('hidden'));
+  dashboard.style.display='none';
+  document.querySelector('.switcher').classList.remove('hidden');
+}
+async function loadProfile(user){
+  // Existing project profile schema: id, username, first_name, last_name, account_type,
+  // class_name, position, language, role, status, created_at.
+  const {data,error}=await supabaseClient.from('profiles').select('*').eq('id',user.id).maybeSingle();
+  if(error) console.warn('Profile fetch:',error.message);
+  return data||null;
+}
+registerForm.addEventListener('submit',async e=>{
+  e.preventDefault();clearMessage();
+  const firstName=document.getElementById('firstName').value.trim();
+  const lastName=document.getElementById('lastName').value.trim();
+  const username=document.getElementById('username').value.trim().toLowerCase();
+  const password=document.getElementById('password').value;
+  const confirm=document.getElementById('confirmPassword').value;
+  const type=accountType.value;
+  const className=type==='student'?document.getElementById('className').value:null;
+  if(password!==confirm){showMessage('Parollar bir xil emas. Qayta tekshiring.','err');return}
+  if(type==='student'&&!className){showMessage('Sinfingizni tanlang.','err');return}
+  const btn=document.getElementById('registerButton');btn.disabled=true;btn.textContent='Akkaunt yaratilmoqda...';
+  try{
+    if(!supabaseClient) throw new Error('Supabase kutubxonasi yuklanmadi. Internetni tekshiring va sahifani yangilang.');
+    // Username uniqueness is ideally enforced by the existing DB. This check is informational only.
+    const {data:existing,error:checkError}=await supabaseClient.from('profiles').select('username').ilike('username',username).limit(1);
+    if(!checkError&&existing?.length){showMessage('Bu foydalanuvchi nomi band. Boshqasini tanlang.','err');return}
+    const {data,error}=await supabaseClient.auth.signUp({
+      email:usernameToEmail(username),password,
+      options:{data:{username,first_name:firstName,last_name:lastName,account_type:type,class_name:className,language:'uz'}}
+    });
+    if(error)throw error;
+    if(data.user){
+      showMessage('Akkaunt yaratish so‘rovi yuborildi. Agar tasdiqlash talab qilinmasa, tizimga kirishingiz mumkin.','ok');
+      setMode('login');
+      document.getElementById('loginUsername').value=username;
+    }else showMessage('Akkaunt yaratilmadi. Qayta urinib ko‘ring.','err');
+  }catch(err){showMessage(err.message||'Ro‘yxatdan o‘tishda xatolik yuz berdi.','err')}
+  finally{btn.disabled=false;btn.textContent='Ro‘yxatdan o‘tish'}
+});
+loginForm.addEventListener('submit',async e=>{
+  e.preventDefault();clearMessage();
+  const username=document.getElementById('loginUsername').value.trim().toLowerCase();
+  const password=document.getElementById('loginPassword').value;
+  const btn=document.getElementById('loginButton');btn.disabled=true;btn.textContent='Tekshirilmoqda...';
+  try{
+    if(!supabaseClient) throw new Error('Supabase kutubxonasi yuklanmadi. Internetni tekshiring va sahifani yangilang.');
+    const {data,error}=await supabaseClient.auth.signInWithPassword({email:usernameToEmail(username),password});
+    if(error)throw error;
+    const profile=await loadProfile(data.user);
+    if(profile?.status && !['approved','active'].includes(String(profile.status).toLowerCase())){
+      await supabaseClient.auth.signOut();
+      showMessage('Akkauntingiz hali tasdiqlanmagan. Admin tasdiqlashini kuting.','err');
+      return;
+    }
+    showDashboard(data.user,profile);
+  }catch(err){showMessage('Kirish amalga oshmadi. Username yoki parolni tekshiring. '+(err.message||''),'err')}
+  finally{btn.disabled=false;btn.textContent='Kirish'}
+});
+
+(async()=>{
+  try{
+    if(!supabaseClient){showMessage('Supabase kutubxonasi yuklanmadi. Internetni tekshiring va sahifani yangilang.','err');return;}
+    const {data:{session}}=await supabaseClient.auth.getSession();
+    if(session?.user){
+      const profile=await loadProfile(session.user);
+      if(profile?.status && !['approved','active'].includes(String(profile.status).toLowerCase())){
+        await supabaseClient.auth.signOut();showAuth();showMessage('Akkauntingiz tasdiqlashni kutmoqda.','err');
+      }else showDashboard(session.user,profile);
+    }
+  }catch(e){console.warn('Session check failed:',e)}
+})();
+</script>
+</body>
+</html>
